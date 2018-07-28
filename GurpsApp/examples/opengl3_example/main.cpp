@@ -122,7 +122,7 @@ int main(int, char**)
 		
 		//if (ImGui::BeginMenuBar())
 		//{
-			//
+			// Menu Bar is not complete. So, it remains unused.
 			//if (ImGui::BeginMenu("File"))
 			//{
 				//if (ImGui::MenuItem("INACTIVE", "IN")) { /* Do stuff */ }

@@ -1,5 +1,8 @@
 #pragma once
 //These Function chunks were imported from DearImgui's Demo and .h files.
+//I honestly do not know which items in particular are absolutely required for the functional
+//portions of the program. I will trim this down in time, hopefully.
+
 // Configuration file (edit imconfig.h or define IMGUI_USER_CONFIG to set your own filename)
 #ifdef IMGUI_USER_CONFIG
 #include IMGUI_USER_CONFIG
@@ -72,7 +75,9 @@ static void GURPS_ShowHelpMarker(const char* desc)
 
 int rollSingleDie()
 {
-	
+	//I hope that I may find a more reliable or less hacky solution to random numbers, 
+	//But this perfoms better than I had originally expected.
+
 	int d = (rand() % 6 + 1);
 
 	return d;
@@ -80,6 +85,8 @@ int rollSingleDie()
 
 int rollMultipleDie(int n)
 {
+	//Generic function for rolling any number of die, and return its values. 
+
 	int d = 0;
 	//srand(time(NULL)); //This function assumes that Srand Time is called within the function it is called in.
 	//sleep();
@@ -330,13 +337,43 @@ void Popups()
 
 };
 
-
+void successRollAddInfo()
+{
+	//Additional info for the Success Roll Helper. 
+	//Things otherwise would be rather cluttered in the page.
+	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	if (ImGui::TreeNode("For more information on other uses for Success rolls, Select here.\nSuccess Rolls are the Heart of GURPS. Be sure to familiarize yourself."))
+	{
+		if (ImGui::TreeNode("Contest Roll Information:"))
+		{
+			ImGui::Text("For a Quick Contest(ex:Two advenurers grabbing for the same shiny artifact);\nBoth contestants roll the same skill with the Success Roll Handler. The Highest roll wins. \n\nThe Degree of success breaks a tie, if that occurs.\nIf both parties have identical degrees of success, no one wins.");
+			ImGui::Text("\nRegular Contests(ex:Two politicians at a debate);\nAre similar to Quick Contests, but if both parties succeed or fail, they re-roll. \n\nIf both contestants constantly have score of 6 or less, raise the lower score to 10, \nNext, add that amount to the higher roll and evaluate the winner.\nDo the opposite process if the two contestant's scores are higher than 14.\n");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		//ImGui::TreePop();
+		if (ImGui::TreeNode("Resistance Roll Information:"))
+		{
+			//ImGui::Text("");
+			ImGui::Text("In a Resistance Roll, an unwilling subject rolls to resist using a skill or attribute.\nThe attacker uses their attacking ability, and the defender, the related resistance.\n\nThis process follows the rules of a Quick Contest, but the attacker must win outright.\nIn the event of a tie, the defender resists the attack and is unharmed by the affliction.\n\nIf the attack is against a living, sapient subject, \nthe attacker's effective skill can't exceed 16, unless the defender's resistance is >16.\nOften, Resistance rolls are Will Rolls(By Default, your IQ), against fear, stress, and more.");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		if (ImGui::TreeNode("Sense Roll Information:"))
+		{
+			ImGui::Text("Sense Rolls involve a roll against your senses to detect something, often hidden.\n(Ex:Tasting poison in the queen's wine at her coronation feast.)\nTo roll, use your Perception(By Default, your IQ) as the governing skill.\n\nItems or persons visally hidden, can be treated as a Quick Contest \nagainst the planter or hiding individual's soncealment skills (Holdout,Camouflage).\n\nFor situations of testing hearing, make a separate IQ Roll to make out speech.\nIn a Quick Contest role to stay silent, use the Stealth Skill.\nFor hearing distances, refer to Page 358 of the Basic Set: Campaigns.\n\nTaste and Smell are sensorily similar. The advantages Disciminitory Taste and Smell \ncan allow you to identify people, places, and things similar to standard vision.");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		ImGui::TreePop();
+	}
+};
 
 
 
 void successRoll()
 {
-	//This function handles Success Rolls.
+	//This function handles Success Rolls and is called in the Main program.
 	if (ImGui::CollapsingHeader("Success Roll Handler"))
 	{
 		srand(time(NULL));
@@ -345,35 +382,12 @@ void successRoll()
 		static int roll = 10;
 		static int degree = 0;
 		int result = 3;
-		ImGui::Text("Roll 3 Die against your skills, attributes, and situational modifiers. \nThis can be used for Attribute Rolls(ex:Will Rolls), Skill Rolls, \nand even as an estimation tool for success or failiure.\n\n\nFor additional details See Page 343-349 of Gurps 4e Basic Set: Campaigns");
+		ImGui::Text("Roll 3 Die against your skills, attributes, and situational modifiers. \nThis can be used for Attribute Rolls(ex:Will Rolls), Skill Rolls, \nand includes a tool for success or failiure.\n\n\nFor additional details See Page 343-349 of Gurps 4e Basic Set: Campaigns");
 
 		//ImGui::Text("For more information on other uses for Success rolls, Select here.");
-		ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
-		if (ImGui::TreeNode("For more information on other uses for Success rolls, Select here.\nSuccess Rolls are the Heart of GURPS. Be sure to familiarize yourself."))
-		{
-			if (ImGui::TreeNode("Contest Roll Information:"))
-			{
-				ImGui::Text("For a Quick Contest(ex:Two advenurers grabbing for the same shiny artifact);\nBoth contestants roll the same skill with the Success Roll Handler. The Highest roll wins. \n\nThe Degree of success breaks a tie, if that occurs.\nIf both parties have identical degrees of success, no one wins.");
-				ImGui::Text("\nRegular Contests(ex:Two politicians at a debate);\nAre similar to Quick Contests, but if both parties succeed or fail, they re-roll. \n\nIf both contestants constantly have score of 6 or less, raise the lower score to 10, \nNext, add that amount to the higher roll and evaluate the winner.\nDo the opposite process if the two contestant's scores are higher than 14.\n");
-				ImGui::TreePop();
-			}
-			ImGui::Text("\n");
-			//ImGui::TreePop();
-			if (ImGui::TreeNode("Resistance Roll Information:"))
-			{
-				//ImGui::Text("");
-				ImGui::Text("In a Resistance Roll, an unwilling subject rolls to resist using a skill or attribute.\nThe attacker uses their attacking ability, and the defender, the related resistance.\n\nThis process follows the rules of a Quick Contest, but the attacker must win outright.\nIn the event of a tie, the defender resists the attack and is unharmed by the affliction.\n\nIf the attack is against a living, sapient subject, \nthe attacker's effective skill can't exceed 16, unless the defender's resistance is >16.\nOften, Resistance rolls are Will Rolls(By Default, your IQ), against fear, stress, and more.");
-				ImGui::TreePop();
-			}
-			ImGui::Text("\n");
-			if (ImGui::TreeNode("Sense Roll Information:"))
-			{
-				ImGui::Text("Sense Rolls involve a roll against your senses to detect something, often hidden.\n(Ex:Tasting poison in the queen's wine at her coronation feast.)\nTo roll, use your Perception(By Default, your IQ) as the governing skill.\n\nItems or persons visally hidden, can be treated as a Quick Contest \nagainst the planter or hiding individual's soncealment skills (Holdout,Camouflage).\n\nFor situations of testing hearing, make a separate IQ Roll to make out speech.\nIn a Quick Contest role to stay silent, use the Stealth Skill.\nFor hearing distances, refer to Page 358 of the Basic Set: Campaigns.\n\nTaste and Smell are sensorily similar. The advantages Disciminitory Taste and Smell \ncan allow you to identify people, places, and things similar to standard vision.");
-				ImGui::TreePop();
-			}
-			ImGui::Text("\n");
-			ImGui::TreePop();
-		}
+		successRollAddInfo();
+		//to preserve the clarity of the function, I'm moving the texty bits into seperate functions.
+		
 		ImGui::Text("__________SUCCESS_ROLL_INPUT_______________________\n");
 		ImGui::SliderInt("Skill", &skill, 0, 20); ImGui::SameLine(150);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Slide in the highest skill or attribute to roll against. \nIf you are rolling against an Attribute(HT,IQ,ST) more that 20, treat it as 20.");
@@ -407,6 +421,9 @@ void successRoll()
 		ImGui::Text("\n\n");
 	}
 };
+
+
+
 
 
 void reactionRolls()
@@ -471,6 +488,92 @@ void reactionRolls()
 };
 
 
+void damageRollAddInfo()
+{
+	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	if (ImGui::TreeNode("For more information regarding Combat, Select here.\n This information just might save your PC."))
+	{
+		if (ImGui::TreeNode("Basic Combat Flow and Turn sequence:"))
+		{
+			ImGui::Text("Combat in GURPS takes place each turn by a span a second or so. Despite that,\nCombat shouldn't always be in a second by second basis, and can include on the fly skill rolls!\nTurn order is detrmined by each PC/NPC's Basic Speed. PC tie's are broken by highest DX\nIf a tie is still in the way, it is broken by the GM randomly.");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		//ImGui::TreePop();
+		if (ImGui::TreeNode("Attack Flow During A Turn:"))
+		{
+			//ImGui::Text("");
+			ImGui::Text("Here is the Basic Flow of an Attack within One Turn of Combat:");
+			ImGui::BulletText("Make an attack roll(a Success Roll); rolling against your effective skills with your weapon.\nA Critical Success with an Attack Roll Skips a defender's Defense Roll.");
+			ImGui::BulletText("If your attack is successful, your opponent must make a Defense roll to evade it.\nThis Defensive Roll(A Success Roll) is against the defender's active defense score.\nFor More Info, refer to the Tab on Defense.");
+			ImGui::BulletText("If you succeed in attempting to hit your target, and they fail to defend against it,\nyour attack hits home, and you will Roll for Damage.");
+			ImGui::TreePop();
+		}
+
+		//We Could REALLY Use an entry on How to Handle and evaluate your on defenses for the defense roll HERE.
+		//It's somewhat optional. it wouldn't break my heart but it would make things go smoothly.
+		//Page 374 of the Basic Set should give you everything you need.
+		ImGui::Text("\n");
+		if (ImGui::TreeNode("What to Do During a Turn: Maneuvers"))
+		{
+			ImGui::Text("During your turn, you can perform a variety of Maneuvers. Whatever Maneuver you choose in your turn \nwill determine what you can do on your turn, and open or close options for attack or defense.\nGeneral Descriptions of some Manuvers are below. for more details, see the Upcoming Combat Status Tool.");
+			ImGui::BulletText("Do Nothing:\nTake any Active Defense, but No movement.");
+			ImGui::BulletText("Attack:\nMake an armed attack, melee or ranged. Your weapons must be ready, and target in reach.");
+			ImGui::BulletText("All Out Attack:\n Make an armed attack, with no effort to defend yourself.\nVariations of the All Out Attack are covered in the Combat Status Tool.");
+			ImGui::BulletText("All Out Defense:\nIncrease your defense options at the cost of attack oppurtunity. \nDefensive moves vary, and are referenced in the Combat Status Tool.");
+			ImGui::BulletText("Move:\nMove any number of hexes/yards, up to your maximum Move Distance, and take any Active Defense.\n");
+			//If you run forward for 2+Turns, you receive a 20 percent Move Bonus rounded down.
+			ImGui::BulletText("Change Posture:\nSwitch between one posture to another. You cannot move while changing posture.\nMore detailed info on these postures are in the Combat Status Tool");
+			ImGui::BulletText("Ready:\nGrab or draw any Item and prepare it for use. Some weapons need a Ready Manuver to be re-used.\nReady manuvers can be used to operate physical items during combat. \nTake any active defense, but movement is limited to a Step.");
+			ImGui::BulletText("Aim:\nWith specified weapon and target, spend the turn aiming at them. \nIf Aim is followed by an attack, add your weapon's accuracy to your effective skill. \nInjury while aiming needs a Will Roll to check if you lost your aim.\nTake any active defense at the cost of your aim. You can take a step as well.\nSimilar Manuvers like Evaluate, Concentrate, and Wait are in the Upcoming Combat Status Tool.");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		if (ImGui::TreeNode("Free Actions:"))
+		{
+			ImGui::Text("Free Actions can be completed during any manuver. These include:");
+			ImGui::BulletText("Speech:\nNo matter what, you can always talk in a manuver. A sentence or two per turn is reasonable.");
+			ImGui::BulletText("Maintain Supernatural Ability:\nAs long as you are active, you can maintain a spell or psionic ability.");
+			ImGui::BulletText("Drop a Ready item:\nYou can drop any item that you have readied. You can drop the item anywhere in reach.");
+			ImGui::BulletText("Crouch:\n If possible, you can crouch (or rise from a crouch to stand) at the start of your turn.\nMovement will be slowed, and you can't sprint, but you will be a harder target to hit.");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		if (ImGui::TreeNode("Non-Fatal Injury and You: When the Dog Bites/Bee Stings."))
+		{
+			ImGui::Text("Your HP is determined by your Strength, one to one.\nYou will take damage if your opponent's attack penetrates completely through your DR.\nThe Penetrated damage is then modified by the weapon's wounding modifier.\n\nAny penetrated attack is devastating to you or an NPC's combat effectiveness.\n");
+			ImGui::BulletText("If you have less than 1/3 of your HP, you're badly wounded, Move and Dodge are halved.\n");
+			ImGui::BulletText("If you have lost HP during a Turn, you are briefly in Shock for your next turn.\nYour DX and IQ for the next turn will be reduced in equal measure to HP loss, up to -4.\nShock doesn't penalize active defensive manuvers, but it will cripple other skils briefly.");
+			ImGui::BulletText("If you sustain a single injury more than 1/2 of your HP in most situations,\n or a body part is injured to the point of crippling, you have a Major Wound.\nTo avoid knockdown and stun from such a grave injury, Take an HT Roll. \nThe HT roll is taken at HT-5 for face, Male groin, or vitals, (and the Male groin),\n HT-10 if wounded in the Skull or Eye, HT+3 and HT-4 for High and Low Pain Threshold.\n If the HT roll failed, you are stunned. Fall prone and drop anything you were carrying.\nWith a degree of failiure greater than 5, you fall unsconsious.");
+			ImGui::BulletText("if you have 0 or less HP, you are in danger of Collapse.\nOn your next turn, make an HT roll at -1 of every full multiple of HP below 0.\nIf Successful, you proceed as usual, but you must continue succeeding to stay in battle.\nIf you Do Nothing, you only need to roll to do any other action to remain conscious.\nIf you fail the HT roll, you fall unconscious.");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		if (ImGui::TreeNode("Mortal Injury: Knocking on Heaven's Door."))
+		{
+			ImGui::Text("If you are here, you have suffered injuries that total more than -1x your HP; Good Luck.\nThe effects of injuries stated above still apply, like HT rolls to stay lucid.");
+			ImGui::BulletText("Once you are injured to -1x HP, make an HT roll. If you fail, you die. \nAt a degree of failiure of -1 or -2 you may cheat death, but you are still dying.");
+			ImGui::TreePop();
+		}
+		//We Could really use a Tooltip on Dying. Worded so that it applies to both PC's and NPCs. 
+		//A good explanation of the process is on page 380 of the Gurps basic Set: Campaigns.
+
+		//This Information set is SUPER long, but if you want more neatly nested text, use this default text pile.
+		/*
+		ImGui::Text("\n");
+		if (ImGui::TreeNode("NestedText:"))
+		{
+		ImGui::BulletText("Bullet:");
+		ImGui::Text("Text");
+		ImGui::TreePop();
+		}
+		*/
+		ImGui::Text("\n");
+		ImGui::TreePop();
+	}
+};
+
+
 void damageRoll()
 {
 	//Arguably the most complicated of the bunch. When complete, this function handles rolling for damage,
@@ -480,79 +583,8 @@ void damageRoll()
 		
 		ImGui::Text("When your attack strikes, use these tools to determine the damage output. \nIf you take damage, this tool also determine how much damage to your HT you have taken. \n\n\nFor additional details See Page 369-374 of Gurps 4e Basic Set: Campaigns");
 		//BEGINNING COMBAT INFORMATION
-		ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
-		if (ImGui::TreeNode("For more information regarding Combat, Select here.\n This information just might save your PC."))
-		{
-			if (ImGui::TreeNode("Basic Combat Flow and Turn sequence:"))
-			{
-				ImGui::Text("Combat in GURPS takes place each turn by a span a second or so. Despite that,\nCombat shouldn't always be in a second by second basis, and can include on the fly skill rolls!\nTurn order is detrmined by each PC/NPC's Basic Speed. PC tie's are broken by highest DX\nIf a tie is still in the way, it is broken by the GM randomly.");
-				ImGui::TreePop();
-			}
-			ImGui::Text("\n");
-			//ImGui::TreePop();
-			if (ImGui::TreeNode("Attack Flow During A Turn:"))
-			{
-				//ImGui::Text("");
-				ImGui::Text("Here is the Basic Flow of an Attack within One Turn of Combat:");
-				ImGui::BulletText("Make an attack roll(a Success Roll); rolling against your effective skills with your weapon.\nA Critical Success with an Attack Roll Skips a defender's Defense Roll.");
-				ImGui::BulletText("If your attack is successful, your opponent must make a Defense roll to evade it.\nThis Defensive Roll(A Success Roll) is against the defender's active defense score.\nFor More Info, refer to the Tab on Defense.");
-				ImGui::BulletText("If you succeed in attempting to hit your target, and they fail to defend against it,\nyour attack hits home, and you will Roll for Damage.");
-				ImGui::TreePop();
-			}
-
-			//We Could REALLY Use an entry on How to Handle and evaluate your on defenses for the defense roll HERE.
-			//It's somewhat optional. it wouldn't break my heart but it would make things go smoothly.
-			//Page 374 of the Basic Set should give you everything you need.
-			ImGui::Text("\n");
-			if (ImGui::TreeNode("What to Do During a Turn: Maneuvers"))
-			{
-				ImGui::Text("During your turn, you can perform a variety of Maneuvers. Whatever Maneuver you choose in your turn \nwill determine what you can do on your turn, and open or close options for attack or defense.\nGeneral Descriptions of some Manuvers are below. for more details, see the Upcoming Combat Status Tool.");
-				ImGui::BulletText("Do Nothing:\nTake any Active Defense, but No movement.");
-				ImGui::BulletText("Attack:\nMake an armed attack, melee or ranged. Your weapons must be ready, and target in reach.");
-				ImGui::BulletText("All Out Attack:\n Make an armed attack, with no effort to defend yourself.\nVariations of the All Out Attack are covered in the Combat Status Tool.");
-				ImGui::BulletText("All Out Defense:\nIncrease your defense options at the cost of attack oppurtunity. \nDefensive moves vary, and are referenced in the Combat Status Tool.");
-				ImGui::BulletText("Move:\nMove any number of hexes/yards, up to your maximum Move Distance, and take any Active Defense.\n");
-				//If you run forward for 2+Turns, you receive a 20 percent Move Bonus rounded down.
-				ImGui::BulletText("Change Posture:\nSwitch between one posture to another. You cannot move while changing posture.\nMore detailed info on these postures are in the Combat Status Tool");
-				ImGui::BulletText("Ready:\nGrab or draw any Item and prepare it for use. Some weapons need a Ready Manuver to be re-used.\nReady manuvers can be used to operate physical items during combat. \nTake any active defense, but movement is limited to a Step.");
-				ImGui::BulletText("Aim:\nWith specified weapon and target, spend the turn aiming at them. \nIf Aim is followed by an attack, add your weapon's accuracy to your effective skill. \nInjury while aiming needs a Will Roll to check if you lost your aim.\nTake any active defense at the cost of your aim. You can take a step as well.\nSimilar Manuvers like Evaluate, Concentrate, and Wait are in the Upcoming Combat Status Tool.");
-				ImGui::TreePop();
-			}
-			ImGui::Text("\n");
-			if (ImGui::TreeNode("Free Actions:"))
-			{
-				ImGui::Text("Free Actions can be completed during any manuver. These include:");
-				ImGui::BulletText("Speech:\nNo matter what, you can always talk in a manuver. A sentence or two per turn is reasonable.");
-				ImGui::BulletText("Maintain Supernatural Ability:\nAs long as you are active, you can maintain a spell or psionic ability.");
-				ImGui::BulletText("Drop a Ready item:\nYou can drop any item that you have readied. You can drop the item anywhere in reach.");
-				ImGui::BulletText("Crouch:\n If possible, you can crouch (or rise from a crouch to stand) at the start of your turn.\nMovement will be slowed, and you can't sprint, but you will be a harder target to hit.");
-				ImGui::TreePop();
-			}
-			ImGui::Text("\n");
-			if (ImGui::TreeNode("Injury and You: When the Dog Bites/Bee Stings."))
-			{
-				ImGui::Text("Your HP is determined by your Strength, one to one.\nYou will take damage if your opponent's attack penetrates completely through your DR.\nThe Penetrated damage is then modified by the weapon's wounding modifier.\n\nAny penetrated attack is devastating to you or an NPC's combat effectiveness.\n");
-				ImGui::BulletText("If you have less than 1/3 of your HP, you're badly wounded, Move and Dodge are halved.\n");
-				ImGui::BulletText("If you sustain a single injury greater than half of your HP, you have a Major Wound.\nTake an HT Roll to avoid knockdown/stun. If failed, fall prone and drop anything carried.\nWith a degree of failiure greater than 5, you fall unsconsious.");
-				ImGui::BulletText("if you have 0 or less HP, you are in danger of Collapse.\nOn your next turn, make an HT roll at -1 of every full multiple of HP below 0.\nIf Successful, you proceed as usual, but you must continue succeeding to stay in battle.\nIf you fail the HT roll, you fall unconscious.");
-				ImGui::TreePop();
-			}
-			//We Could really use a Tooltip on Dying. Worded so that it applies to both PC's and NPCs. 
-			//A good explanation of the process is on page 380 of the Gurps basic Set: Campaigns.
-
-			//This Information set is SUPER long, but if you want more neatly nested text, use this default text pile.
-			/*
-			ImGui::Text("\n");
-			if (ImGui::TreeNode("NestedText:"))
-			{
-				ImGui::BulletText("Bullet:");
-				ImGui::Text("Text");
-				ImGui::TreePop();
-			}
-			*/
-			ImGui::Text("\n");
-			ImGui::TreePop();
-		}
+		damageRollAddInfo();
+		
 		//END OF COMBAT INFORMATION
 		srand(time(NULL));
 
