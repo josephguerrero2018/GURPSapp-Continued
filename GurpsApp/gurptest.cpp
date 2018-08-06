@@ -54,6 +54,78 @@
 //static bool a = false;
 //static bool b = false;
 
+void Popups()
+{
+	//This is PROOF that I can have a sub-tree within the Demo INDEPENDENT 
+	//From the main demo.cpp.
+	//This Function is DEFUNCT, but if you wish, throw it into the main to see how the interface interacts.
+	if (ImGui::TreeNode("Popups"))
+	{
+		ImGui::TextWrapped("When a popup is active, it inhibits interacting with windows that are behind the popup. Clicking outside the popup closes it.");
+
+		static int selected_fish = -1;
+		const char* names[] = { "Bream", "Haddock", "Mackerel", "Pollock", "Tilefish" };
+		static bool toggles[] = { true, false, false, false, false };
+
+		// Simple selection popup
+		// (If you want to show the current selection inside the Button itself, you may want to build a string using the "###" operator to preserve a constant ID with a variable label)
+		if (ImGui::Button("Select.."))
+			ImGui::OpenPopup("select");
+		ImGui::SameLine();
+		ImGui::TextUnformatted(selected_fish == -1 ? "<None>" : names[selected_fish]);
+		if (ImGui::BeginPopup("select"))
+		{
+			ImGui::Text("Aquarium");
+			ImGui::Separator();
+			for (int i = 0; i < IM_ARRAYSIZE(names); i++)
+				if (ImGui::Selectable(names[i]))
+					selected_fish = i;
+			ImGui::EndPopup();
+		}
+
+		// Showing a menu with toggles
+		if (ImGui::Button("Toggle.."))
+			ImGui::OpenPopup("toggle");
+		if (ImGui::BeginPopup("toggle"))
+		{
+			for (int i = 0; i < IM_ARRAYSIZE(names); i++)
+				ImGui::MenuItem(names[i], "", &toggles[i]);
+			if (ImGui::BeginMenu("Sub-menu"))
+			{
+				ImGui::MenuItem("Click me");
+				ImGui::EndMenu();
+			}
+
+			ImGui::Separator();
+			ImGui::Text("Tooltip here");
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("I am a tooltip over a popup");
+
+			if (ImGui::Button("Stacked Popup"))
+				ImGui::OpenPopup("another popup");
+			if (ImGui::BeginPopup("another popup"))
+			{
+				for (int i = 0; i < IM_ARRAYSIZE(names); i++)
+					ImGui::MenuItem(names[i], "", &toggles[i]);
+				if (ImGui::BeginMenu("Sub-menu"))
+				{
+					ImGui::MenuItem("Click me");
+					ImGui::EndMenu();
+				}
+				ImGui::EndPopup();
+			}
+			ImGui::EndPopup();
+		}
+
+		if (ImGui::Button("Popup Menu.."))
+			ImGui::OpenPopup("FilePopup");
+
+		ImGui::TreePop();
+	}
+
+
+};
+
 //IMPORTED DEFINITTIONS FROM IMGUI DEMO FOR CONVENIENCE's SAKE
 static void GURPS_ShowHelpMarker(const char* desc)
 {
@@ -199,6 +271,10 @@ int DamageTableMod(int str,const char* type)
 		{
 			return -4;
 		}
+		else if (str >= 5 && str <= 6)
+		{
+			return -3;
+		}
 		else if (str >= 7 && str <= 8)
 		{
 			return -2;
@@ -265,77 +341,7 @@ int DamageTableMod(int str,const char* type)
 
 //DearIMGUI ORITENTED CONTENTS
 
-void Popups()
-{
-	//This is PROOF that I can have a sub-tree within the Demo INDEPENDENT 
-	//From the main demo.cpp.
-	//This Function is DEFUNCT, but if you wish, throw it into the main to see how the interface interacts.
-	if (ImGui::TreeNode("Popups"))
-			{
-				ImGui::TextWrapped("When a popup is active, it inhibits interacting with windows that are behind the popup. Clicking outside the popup closes it.");
 
-				static int selected_fish = -1;
-				const char* names[] = { "Bream", "Haddock", "Mackerel", "Pollock", "Tilefish" };
-				static bool toggles[] = { true, false, false, false, false };
-
-				// Simple selection popup
-				// (If you want to show the current selection inside the Button itself, you may want to build a string using the "###" operator to preserve a constant ID with a variable label)
-				if (ImGui::Button("Select.."))
-					ImGui::OpenPopup("select");
-				ImGui::SameLine();
-				ImGui::TextUnformatted(selected_fish == -1 ? "<None>" : names[selected_fish]);
-				if (ImGui::BeginPopup("select"))
-				{
-					ImGui::Text("Aquarium");
-					ImGui::Separator();
-					for (int i = 0; i < IM_ARRAYSIZE(names); i++)
-						if (ImGui::Selectable(names[i]))
-							selected_fish = i;
-					ImGui::EndPopup();
-				}
-
-				// Showing a menu with toggles
-				if (ImGui::Button("Toggle.."))
-					ImGui::OpenPopup("toggle");
-				if (ImGui::BeginPopup("toggle"))
-				{
-					for (int i = 0; i < IM_ARRAYSIZE(names); i++)
-						ImGui::MenuItem(names[i], "", &toggles[i]);
-					if (ImGui::BeginMenu("Sub-menu"))
-					{
-						ImGui::MenuItem("Click me");
-						ImGui::EndMenu();
-					}
-
-					ImGui::Separator();
-					ImGui::Text("Tooltip here");
-					if (ImGui::IsItemHovered())
-						ImGui::SetTooltip("I am a tooltip over a popup");
-
-					if (ImGui::Button("Stacked Popup"))
-						ImGui::OpenPopup("another popup");
-					if (ImGui::BeginPopup("another popup"))
-					{
-						for (int i = 0; i < IM_ARRAYSIZE(names); i++)
-							ImGui::MenuItem(names[i], "", &toggles[i]);
-						if (ImGui::BeginMenu("Sub-menu"))
-						{
-							ImGui::MenuItem("Click me");
-							ImGui::EndMenu();
-						}
-						ImGui::EndPopup();
-					}
-					ImGui::EndPopup();
-				}
-
-				if (ImGui::Button("Popup Menu.."))
-					ImGui::OpenPopup("FilePopup");
-			
-				ImGui::TreePop();
-			}   
-
-
-};
 
 void successRollAddInfo()
 {
@@ -393,6 +399,9 @@ void successRoll()
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Slide in the highest skill or attribute to roll against. \nIf you are rolling against an Attribute(HT,IQ,ST) more that 20, treat it as 20.");
 		ImGui::SliderInt("Modifier(Suc)", &modifier0, -10, 10);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your success can be more or less favorable. \nThe modifier directly effects your effective skill, NOT your roll. \nAll combined Equipment and situational modifiers go here.");
+		//If you want to change the values of the roll directly, enable the slider below for debug.
+		ImGui::SliderInt("DEBUG: RollValue", &roll, 3, 18);
+		
 		if (ImGui::Button("Roll 3d."))
 		    roll = rollMultipleDie(3);
 			degree = ((skill + modifier0) - roll);
@@ -401,6 +410,7 @@ void successRoll()
 		ImGui::Text("RESULTS");
 		ImGui::Separator();
 		ImGui::Text("Current 3d Roll: %d", roll);
+		ImGui::Text("Final roll Value: %d", (roll+modifier0));
 		ImGui::Text("Textual Results of Sucess Roll:");
 		if (result == 1)
 		{
@@ -884,6 +894,31 @@ void damageRoll()
 };
 
 
+void combatStatusToolAddInfo()
+{
+	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	if (ImGui::TreeNode("For more information regarding Combat, Select here."))
+	{
+		if (ImGui::TreeNode("FirstHeader"))
+		{
+			ImGui::Text("\n");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		//ImGui::TreePop();
+		if (ImGui::TreeNode("Header"))
+		{
+			//ImGui::Text("");
+			ImGui::Text("Text");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+
+		ImGui::TreePop();
+	}
+};
+
+
 void combatStatusTool()
 {
 
@@ -893,25 +928,7 @@ void combatStatusTool()
 		
 
 		ImGui::Text("To assist in combat, use this toolset to keep tactical information at hand. \nSelect Various status affects and manuvers to Remain on top of your game. \n\n\nFor additional details See Page FIND APPROPRIATE PAGES of Gurps 4e Basic Set: Campaigns");
-		if (ImGui::TreeNode("For more information regarding Combat, Select here."))
-		{
-			if (ImGui::TreeNode("FirstHeader"))
-			{
-				ImGui::Text("\n");
-				ImGui::TreePop();
-			}
-			ImGui::Text("\n");
-			//ImGui::TreePop();
-			if (ImGui::TreeNode("Header"))
-			{
-				//ImGui::Text("");
-				ImGui::Text("Text");
-				ImGui::TreePop();
-			}
-			ImGui::Text("\n");
-			
-			ImGui::TreePop();
-		}
+		
 
 		ImGui::Text("THIS SECTION IS UNFINISHED");
 
