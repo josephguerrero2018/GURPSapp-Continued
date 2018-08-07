@@ -388,7 +388,7 @@ void successRoll()
 		static int roll = 10;
 		static int degree = 0;
 		int result = 3;
-		ImGui::Text("Roll 3 Die against your skills, attributes, and situational modifiers. \nThis can be used for Attribute Rolls(ex:Will Rolls), Skill Rolls, \nand includes a tool for success or failiure.\n\n\nFor additional details See Page 343-349 of Gurps 4e Basic Set: Campaigns");
+		ImGui::Text("Roll 3 Die against your skills, attributes, and situational modifiers. \nThis can be used for Attribute Rolls(ex:Will Rolls), Skill Rolls, \nand can help you determine if you succeed under pressure.\n\n\nFor additional details See Page 343-349 of Gurps 4e Basic Set: Campaigns");
 
 		//ImGui::Text("For more information on other uses for Success rolls, Select here.");
 		successRollAddInfo();
@@ -397,7 +397,7 @@ void successRoll()
 		ImGui::Text("__________SUCCESS_ROLL_INPUT_______________________\n");
 		ImGui::SliderInt("Skill", &skill, 0, 20); ImGui::SameLine(150);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Slide in the highest skill or attribute to roll against. \nIf you are rolling against an Attribute(HT,IQ,ST) more that 20, treat it as 20.");
-		ImGui::SliderInt("Modifier(Suc)", &modifier0, -10, 10);
+		ImGui::SliderInt("Modifier(Success)", &modifier0, -10, 10);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your success can be more or less favorable. \nThe modifier directly effects your effective skill, NOT your roll. \nAll combined Equipment and situational modifiers go here.");
 		//If you want to change the values of the roll directly, enable the slider below for debug.
 		ImGui::SliderInt("DEBUG: RollValue", &roll, 3, 18);
