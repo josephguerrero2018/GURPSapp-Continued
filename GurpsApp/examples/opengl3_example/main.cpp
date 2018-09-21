@@ -119,6 +119,7 @@ int main(int, char**)
 		ImGui::SetNextWindowPos(ImVec2(660, 0), ImGuiCond_FirstUseEver);
 		ImGui::Begin("GURPSapp Roleplaying Toolset", &my_tool_active, ImGuiWindowFlags_MenuBar);
 		ImGui::Text(" GURPS is a trademark of Steve Jackson Games, and its rules and art are \n copyrighted by Steve Jackson Games. This game aid is the original creation of Joseph Guerrero\n and is released for free distribution, and not for resale, under the permissions granted \n in the Steve Jackson Games Online Policy: http://www.sjgames.com/general/online_policy.html");
+		ImGui::Text("\nFor more information, Be sure to purchase the GURPS 4th Edition Basic Set, Campaigns and Characters.");
 		
 		//if (ImGui::BeginMenuBar())
 		//{
@@ -138,6 +139,8 @@ int main(int, char**)
 		
 
 		successRoll();
+
+		speedrangeTbl();
 
 		damageRoll();
 

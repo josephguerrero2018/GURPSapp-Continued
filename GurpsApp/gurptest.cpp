@@ -350,6 +350,14 @@ void successRollAddInfo()
 	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
 	if (ImGui::TreeNode("For more information on other uses for Success rolls, Select here.\nSuccess Rolls are the Heart of GURPS. Be sure to familiarize yourself."))
 	{
+		if (ImGui::TreeNode("What is a Success Roll?:"))
+		{
+
+			ImGui::Text("A success roll is the backbone of GURPS. When there's a chance of consequential failiure,\nor rewarding success, a Success Roll is the deciding line of such a fate!\n\nThe Success Roll rolls 3 die, against the effective skill in question.\nAs long as the totalled roll is BELOW the effective skill, the roll succeeds.\nNo matter how high or low an effective skill is; rolling 3 or 4 succeeds,\nlikewise, a roll of 17 or 18 fails, no matter how godlike one's skills may be.");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+
 		if (ImGui::TreeNode("Contest Roll Information:"))
 		{
 			ImGui::Text("For a Quick Contest(ex:Two advenurers grabbing for the same shiny artifact);\nBoth contestants roll the same skill with the Success Roll Handler. The Highest roll wins. \n\nThe Degree of success breaks a tie, if that occurs.\nIf both parties have identical degrees of success, no one wins.");
@@ -892,6 +900,57 @@ void damageRoll()
 
 	//END OF FUCNTION
 };
+
+
+
+
+void speedrangeTblAddInfo()
+{
+
+	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	if (ImGui::TreeNode("For more information regarding the Speed/Range Table, Select here."))
+	{
+		if (ImGui::TreeNode("What is the Speed/Range Table?"))
+		{
+			ImGui::Text("When you encounter ranged Combat. A target's Size, Speed, and Range can modify your chances to hit.\n");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		//ImGui::TreePop();
+		if (ImGui::TreeNode("Header"))
+		{
+			//ImGui::Text("");
+			ImGui::Text("Text");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+
+		ImGui::TreePop();
+	}
+
+};
+
+
+
+void speedrangeTbl()
+{
+	//The tables in here are going to be a little packed in.
+
+	//
+	//
+	//
+	//_________U I INTERFACE BEGINS HERE:__________________
+	//
+	if (ImGui::CollapsingHeader("Speed/Range Table Tool"))
+	{
+		ImGui::Text("Confused on how to use the ubiquitous Speed/Range Table? Calculate the results easily here!");
+		speedrangeTblAddInfo();
+
+	}
+
+
+};
+
 
 
 void combatStatusToolAddInfo()
