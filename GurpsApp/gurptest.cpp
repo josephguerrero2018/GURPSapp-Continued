@@ -912,17 +912,18 @@ void speedrangeTblAddInfo()
 	{
 		if (ImGui::TreeNode("What is the Speed/Range Table?"))
 		{
-			ImGui::Text("When you encounter ranged Combat. A target's Size, Speed, and Range can modify your chances to hit.\n");
+			ImGui::Text("When you encounter Ranged Combat, A target's Size, Speed, and Range can modify your chances to hit.\n\nFor example, a broadside of a barn is easier to hit with a projectile weapon,\nbut, knocking the hat off of a train conductor as it speeds by is much harder.\nThis table ensures you can evaluate your chance to hit modifiers effieciently.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
 		//ImGui::TreePop();
-		if (ImGui::TreeNode("Header"))
+		if (ImGui::TreeNode("Modifiers to the Speed/Range Table."))
 		{
 			//ImGui::Text("");
-			ImGui::Text("Text");
+			ImGui::Text("The Speed/Range Table's main measurements are in SM(Size modifier), Yards, and Yards per Second.\n\nSize Modifier changes your chance to hit. SM 0 is a human sized target. To find the SM of an object,\nTake the longest part of an object (i.e length of a dragon, height of a building), and round up.\nAdd +2 to SM for objects that are uniform in shape. +1 for long, uniformly shaped objects.\n\nA target's Speed and range can provide serious penalties to hit at extreme range and speeds.\n");
 			ImGui::TreePop();
 		}
+		ImGui::Text("\n");
 		ImGui::Text("\n");
 
 		ImGui::TreePop();

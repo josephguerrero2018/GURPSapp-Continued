@@ -27,7 +27,7 @@ int main(int, char**)
 #if __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-    GLFWwindow* window = glfwCreateWindow(795, 950, "ImGui GURPSapp Using OpenGL3", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(795, 950, "ImGui GURPSapp Game Aid Using OpenGL3", NULL, NULL);
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
     gl3wInit();
