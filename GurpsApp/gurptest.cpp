@@ -935,6 +935,17 @@ void speedrangeTblAddInfo()
 
 void speedrangeTbl()
 {
+	//VARIABLE DECLARATIONS:
+
+	float speed = 0;
+	float range = 0;
+	float size = 0;
+	int calcModifier = 0;
+	float table[45][3] = 
+	{
+		{0,-15,(((1 / 5) / 12)) / 3},{ 0,-14,(((1 / 3) / 12) / 3) },{ 0,-13,(((1 / 2) / 12) / 3) },{ 0,-12,(((2 / 3) / 12) / 3) },{ 0,-11, (((1 / 12)) / 3) },{ 0,-10, (((3 / 2) / 12) / 3) },{ 0,-9, ((2 / 12) / 3) },{ 0,-8, ((3 / 12) / 3) },{ 0,-7, ((5 / 12) / 3) },{ 0,-6, ((8 / 12) / 3) },{ 0,-5, (1 / 3) },{ 0,-4, (1 / 3) },{ 0,-3, (2 / 3) },{ 0,-2, 1 },{ 0,-1, (3 / 2) },{ 0,0, 2 },{ -1,1, 3 },{ -2, 2, 5 },{ -3, 3, 7 },{ -4, 4, 10 },{ -5, 5, 15 },{-6, 6, 20},{-7,7,30},{-8,8,50},{-9,9,70},{-10,10,100},{-11,11,150},{-12,12,200},{-13,13,300},{-14,14,500},{-15,15,700},{-16,16,1000},{-17,17,1500},{-18,18,2000},{-19,19,3000},{-20,20,5000},{-21,21,7000},{-22,22,10000},{-23,23,15000},{-24,24,20000},{-25,25,30000},{-26,26,50000},{-27,27,70000},{-28,28,100000},{-29,29,150000}
+	};
+
 	//The tables in here are going to be a little packed in.
 
 	//
@@ -946,6 +957,12 @@ void speedrangeTbl()
 	{
 		ImGui::Text("Confused on how to use the ubiquitous Speed/Range Table? Calculate the results easily here!");
 		speedrangeTblAddInfo();
+		ImGui::Text("\n\n");
+		ImGui::Text("__________SPEED_AND RANGE_TABLE_HANDLING_______________________\n");
+
+		ImGui::InputFloat("Target Speed", &speed);
+
+
 
 	}
 
