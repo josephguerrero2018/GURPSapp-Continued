@@ -149,6 +149,7 @@ int rollSingleDie()
 {
 	//I hope that I may find a more reliable or less hacky solution to random numbers, 
 	//But this perfoms better than I had originally expected.
+	//This function works best if you roll less than once per second.
 
 	int d = (rand() % 6 + 1);
 
@@ -347,7 +348,7 @@ void successRollAddInfo()
 {
 	//Additional info for the Success Roll Helper. 
 	//Things otherwise would be rather cluttered in the page.
-	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	ImGui::Text("\n          |__________ADDITIONAL_INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information on other uses for Success rolls, Select here.\nSuccess Rolls are the Heart of GURPS. Be sure to familiarize yourself."))
 	{
 		if (ImGui::TreeNode("What is a Success Roll?:"))
@@ -360,8 +361,8 @@ void successRollAddInfo()
 
 		if (ImGui::TreeNode("Contest Roll Information:"))
 		{
-			ImGui::Text("For a Quick Contest(ex:Two advenurers grabbing for the same shiny artifact);\nBoth contestants roll the same skill with the Success Roll Handler. The Highest roll wins. \n\nThe Degree of success breaks a tie, if that occurs.\nIf both parties have identical degrees of success, no one wins.");
-			ImGui::Text("\nRegular Contests(ex:Two politicians at a debate);\nAre similar to Quick Contests, but if both parties succeed or fail, they re-roll. \n\nIf both contestants constantly have score of 6 or less, raise the lower score to 10, \nNext, add that amount to the higher roll and evaluate the winner.\nDo the opposite process if the two contestant's scores are higher than 14.\n");
+			ImGui::Text("For a Quick Contest(ex:Two advenurers lunging for the same shiny artifact);\nBoth contestants roll the same skill with the Success Roll Handler. The Highest roll wins. \n\nThe Degree of success breaks a tie, if that occurs.\nIf both parties have identical degrees of success, no one wins.");
+			ImGui::Text("\nRegular Contests(ex:Two politicians at a televised debate);\nAre similar to Quick Contests, but if both parties succeed or fail, they re-roll. \n\nIf both contestants constantly have scored of 6 or less, raise the lower score to 10, \nNext, add that amount to the higher roll and evaluate the winner.\nComplete the opposite process if the two contestant's scores are higher than 14.\n");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
@@ -369,13 +370,13 @@ void successRollAddInfo()
 		if (ImGui::TreeNode("Resistance Roll Information:"))
 		{
 			//ImGui::Text("");
-			ImGui::Text("In a Resistance Roll, an unwilling subject rolls to resist using a skill or attribute.\nThe attacker uses their attacking ability, and the defender, the related resistance.\n\nThis process follows the rules of a Quick Contest, but the attacker must win outright.\nIn the event of a tie, the defender resists the attack and is unharmed by the affliction.\n\nIf the attack is against a living, sapient subject, \nthe attacker's effective skill can't exceed 16, unless the defender's resistance is >16.\nOften, Resistance rolls are Will Rolls(By Default, your IQ), against fear, stress, and more.");
+			ImGui::Text("In a Resistance Roll, an unwilling subject rolls to resist using a skill or attribute.\nThe attacker uses their attacking ability, and the defender, the related resistance.\n\nThis process follows the rules of a Quick Contest, but the attacker must win outright.\nIn the event of a tie, the defender resists the attack and is unharmed by the affliction.\n\nIf the attack is against a living, sapient subject, \nthe attacker's effective skill can't exceed 16, unless the defender's resistance is > 16.\nOften, Resistance rolls are Will Rolls(By Default, your IQ), against fear, stress, and force.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
 		if (ImGui::TreeNode("Sense Roll Information:"))
 		{
-			ImGui::Text("Sense Rolls involve a roll against your senses to detect something, often hidden.\n(Ex:Tasting poison in the queen's wine at her coronation feast.)\nTo roll, use your Perception(By Default, your IQ) as the governing skill.\n\nItems or persons visally hidden, can be treated as a Quick Contest \nagainst the planter or hiding individual's soncealment skills (Holdout,Camouflage).\n\nFor situations of testing hearing, make a separate IQ Roll to make out speech.\nIn a Quick Contest role to stay silent, use the Stealth Skill.\nFor hearing distances, refer to Page 358 of the Basic Set: Campaigns.\n\nTaste and Smell are sensorily similar. The advantages Disciminitory Taste and Smell \ncan allow you to identify people, places, and things similar to standard vision.");
+			ImGui::Text("Sense Rolls involve a roll against your senses to detect something, often hidden.\n(Ex:Tasting poison in the queen's wine at her coronation feast.)\nTo roll, use your Perception(By Default, your IQ) as the governing skill.\n\nItems or persons that are visally hidden(Ex:A Stowaway) can be treated as a Quick Contest \nagainst the planter or hiding individual's soncealment skills (Holdout,Camouflage).\n\nFor situations that test hearing, make a separate IQ Roll to make out speech.\nIn a Quick Contest role to stay silent, use the Stealth Skill.\nFor hearing distances, refer to Page 358 of the Basic Set: Campaigns.\n\nTaste and Smell are sensorily similar. The advantages Disciminitory Taste and Smell \ncan allow you to identify people, places, and things similar to standard vision.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
@@ -402,11 +403,11 @@ void successRoll()
 		successRollAddInfo();
 		//to preserve the clarity of the function, I'm moving the texty bits into seperate functions.
 		
-		ImGui::Text("__________SUCCESS_ROLL_INPUT_______________________\n");
+		ImGui::Text("\n__________SUCCESS_ROLL_INPUT_______________________\n");
 		ImGui::SliderInt("Skill", &skill, 0, 20); ImGui::SameLine(150);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Slide in the highest skill or attribute to roll against. \nIf you are rolling against an Attribute(HT,IQ,ST) more that 20, treat it as 20.");
 		ImGui::SliderInt("Modifier(Success)", &modifier0, -10, 10);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your success can be more or less favorable. \nThe modifier directly effects your effective skill, NOT your roll. \nAll combined Equipment and situational modifiers go here.");
+		ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your chance of success\ncan be more or less favorable. \n\nThis modifier fine tunes your effective skill,\nwhich will modify your final rolled value.\n(Ex: -5 to your Running skill as your\nfoe has greased your escape path) \n\nAll Equipment and situational\nmodifiers can be tallied up here.");
 		//If you want to change the values of the roll directly, enable the slider below for debug.
 		ImGui::SliderInt("DEBUG: RollValue", &roll, 3, 18);
 		
@@ -508,12 +509,12 @@ void reactionRolls()
 
 void damageRollAddInfo()
 {
-	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	ImGui::Text("\n          |__________ADDITIONAL_INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information regarding Combat, Select here.\n This information just might save your PC."))
 	{
 		if (ImGui::TreeNode("Basic Combat Flow and Turn sequence:"))
 		{
-			ImGui::Text("Combat in GURPS takes place each turn by a span a second or so. Despite that,\nCombat shouldn't always be in a second by second basis, and can include on the fly skill rolls!\nTurn order is detrmined by each PC/NPC's Basic Speed. PC tie's are broken by highest DX\nIf a tie is still in the way, it is broken by the GM randomly.");
+			ImGui::Text("Combat in GURPS takes place each turn by a span a second or so, for detailed one on one combat. \nLonger timeframes are more suitable for other situations, like mass combat.\nTurn order is detrmined by each PC/NPC's Basic Speed. PC ties are broken by highest DX.\nIf a tie is still in the way of turn progress, it is broken by the GM randomly.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
@@ -522,7 +523,7 @@ void damageRollAddInfo()
 		{
 			//ImGui::Text("");
 			ImGui::Text("Here is the Basic Flow of an Attack within One Turn of Combat:");
-			ImGui::BulletText("Make an attack roll(a Success Roll); rolling against your effective skills with your weapon.\nA Critical Success with an Attack Roll Skips a defender's Defense Roll.");
+			ImGui::BulletText("Make an attack roll(a Success Roll); rolling against your effective skills with your weapon.\nA Critical Success with an Attack Roll skips a defender's Defense Roll.");
 			ImGui::BulletText("If your attack is successful, your opponent must make a Defense roll to evade it.\nThis Defensive Roll(A Success Roll) is against the defender's active defense score.\nFor More Info, refer to the Tab on Defense.");
 			ImGui::BulletText("If you succeed in attempting to hit your target, and they fail to defend against it,\nyour attack hits home, and you will Roll for Damage.");
 			ImGui::TreePop();
@@ -622,24 +623,25 @@ void damageRoll()
 		//DAMAGE INPUTS
 		
 		//MELEE WEAPON RULES
-		ImGui::Text("\n");
+		ImGui::Text("\n\n");
 		ImGui::Text("__________MELEE_DAMAGE_HANDLING_______________________\n");
-		ImGui::Text("If your Weapon Uses Muscle Power, Select the box below to use their rules.\nThis includes Thrown weapons, Bows and Crossbows.\n");
+		ImGui::Text("If your Weapon Uses Muscle Power, Select the box below to quicky ready your roll.\nThis includes Thrown weapons, Bows and Crossbows.\n");
 		ImGui::Checkbox("Muscle Powered Weapon Equipped.", &isMelee);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("Applying Thrust or Swing may not be all you need to input.\nMost Of these weapons have a further modifier.\nFor Example, an Axe is Swing+2.\nYou still need to move the Modifier slider by 2 increments.");
+		ImGui::SameLine(); GURPS_ShowHelpMarker("Muscle Powered Weapons have damage based on a PC's Strength,\nDamage Type, and a plus or minus modifier.\nFor example, an Axe deals Swing+2 damage.To enter this, \nset Damage Type to Swing, enter the axe user's Strength,\nand set the Melee Modifier to 2.");
 
 		if (isMelee == true)
 		{
 			
 			static int pcStrength = 10;
-			ImGui::SliderInt("PC Strength", &pcStrength, 1, 20);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("Your melee Damage, with tooth or sword, is highly dependent on Strength,");
-
+			static int meleeMod = 0;
 			const char* damMelee[] = { "Swing", "Thrust" };
+			//Melee Modifier
 			if (ImGui::Button("Select Melee Damage Type"))
 				ImGui::OpenPopup("selectMelee");
 			ImGui::SameLine();
 			ImGui::TextUnformatted(selected_Melee == -1 ? "<None Selected>" : damMelee[selected_Melee]);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Your melee attack will be a Swing or a Thrust, \nchoose as shown on your weapon's table. \n");
+
 			if (ImGui::BeginPopup("selectMelee"))
 			{
 				ImGui::Text("Damage:");
@@ -649,24 +651,32 @@ void damageRoll()
 						selected_Melee = i;
 				ImGui::EndPopup();
 			}
+			ImGui::SliderInt("PC Strength", &pcStrength, 1, 20);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Your melee Damage, with tooth or steel, \nis highly dependent on Strength. \nThe stronger you are, the harder you will hit with Swings and Thrusts.");
+			ImGui::SliderInt("Sw/Thr +(_) Melee Modifier", &meleeMod, -20, 20);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Enter the Melee Modifier Here. as with the Swing+2 example above, add the +2 here");
+
+			
+			
 			if (ImGui::Button("Apply Melee Damage Attributes:"))
 			{
-				dam_Modifier = DamageTableMod(pcStrength, damMelee[selected_Melee]);
+				dam_Modifier = (DamageTableMod(pcStrength, damMelee[selected_Melee]) + meleeMod);
 				numDie = DamageTableDie(pcStrength, damMelee[selected_Melee]);
 			}
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Press to override the values in the Basic Damage Handler\nwith the Weapon Data you have entered above.");
 			//END OF MELEE DAMAGE HANDLING
 		}
 		ImGui::Text("\n");
 		ImGui::Text("__________BASIC_DAMAGE_INPUT_______________________\n");
 		ImGui::Text("Enter Weapon Table Data");
 		ImGui::SliderInt("(__)d Die", &numDie, 1, 8);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("Damage in GURPS is arranged in a Dice + Adds format.\nFor example, for a damage of 3d-2, slide (__)d to 3 dice and subtract 2 from the results using the modifier below it.");
+		ImGui::SameLine(); GURPS_ShowHelpMarker("Damage in GURPS is arranged in a Dice + Adds format.\nFor example, for a damage of 3d-2, slide (__)d to 3 dice and subtract 2 from the results using the Melee Modifier below it.");
 
-		ImGui::SliderInt("modifier", &dam_Modifier, -8, 8);
+		ImGui::SliderInt("Basic Modifier", &dam_Modifier, -8, 8);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("This would be the + or - Value adjacent to the number of die.\nSome Weapons are slightly better or worse at what they do than others, even among an identical weapon class. \nBe sure to inlcude this Stat from your Weapon's table. \n");
 		
 		ImGui::Text("Die Multiplier/Multiple Shot Counter");
-		ImGui::InputInt("()d X __", &multiplier);
+		ImGui::InputInt("d X (__)", &multiplier);
 		//ImGui::SliderInt("()d Times__", &multiplier, 1, 300 );//Slider just won't work here.
 		ImGui::SameLine(); GURPS_ShowHelpMarker("To prevent excessive die rolling, a roll multiplier is used from X2-3 to the thousands.\nFor Example, for 6dX5, roll six dice and multiply the total damage by 5.\nOr, in the event of a weapon that hits more than 1 time, use this to your adantage.");
 		
@@ -702,9 +712,9 @@ void damageRoll()
 		
 
 		raw_damage = ((dam_roll + dam_Modifier) * multiplier);
-		ImGui::Text("\nBASIC DAMAGE RESULTS");
+		ImGui::Text("\n          |__________BASIC DAMAGE RESULTS__________|");
 		ImGui::Separator();
-		ImGui::Text("Current BASIC DAMAGE Output:%d",raw_damage);
+		ImGui::Text("             Current BASIC DAMAGE Output:%d",raw_damage);
 		//PENETRATIVE DAMAGE LOCAL VARIABLES
 		static bool useRoll = false;
 		static bool is_DR_flexible = false;
@@ -864,10 +874,10 @@ void damageRoll()
 
 		}
 		ImGui::Text("\n");
-		ImGui::Text("FINAL RESULTS");
+		ImGui::Text("          |__________FINAL_RESULTS_OF_DAMAGE_HANDLER__________");
 		ImGui::Separator();
-		ImGui::Text("Current HP DAMAGE PREVENTED:%d", absorbed_damage);
-		ImGui::Text("\nCurrent HP DAMAGE PENETRATED TO VICTIM:%d", pen_damage);
+		ImGui::Text("            Current HP DAMAGE PREVENTED:%d", absorbed_damage);
+		ImGui::Text("\n          Current HP DAMAGE PENETRATED TO VICTIM:%d", pen_damage);
 		/*
 		//This Wounding Multiplier set is only for PENETRATED Damage, but it is stuffed here.
 		//Since there's no place for resolving DR just yet. 
@@ -907,12 +917,12 @@ void damageRoll()
 void speedrangeTblAddInfo()
 {
 
-	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	ImGui::Text("\n          |__________ADDITIONAL_INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information regarding the Speed/Range Table, Select here."))
 	{
 		if (ImGui::TreeNode("What is the Speed/Range Table?"))
 		{
-			ImGui::Text("When you encounter Ranged Combat, A target's Size, Speed, and Range can modify your chances to hit.\n\nFor example, a broadside of a barn is easier to hit with a projectile weapon,\nbut, knocking the hat off of a train conductor as it speeds by is much harder.\nThis table ensures you can evaluate your chance to hit modifiers effieciently.");
+			ImGui::Text("In Ranged Combat, A target's Size, Speed, and Range can modify your chances to hit.\n\nFor example, a broadside of a barn is easier to hit with a projectile weapon,\nbut, knocking the hat off of a train conductor as it speeds by is much harder.\nThis table ensures you can evaluate your chance to hit modifiers efficiently.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
@@ -920,11 +930,11 @@ void speedrangeTblAddInfo()
 		if (ImGui::TreeNode("Modifiers to the Speed/Range Table."))
 		{
 			//ImGui::Text("");
-			ImGui::Text("The Speed/Range Table's main measurements are in SM(Size modifier), Yards, and Yards per Second.\n\nSize Modifier changes your chance to hit. SM 0 is a human sized target. To find the SM of an object,\nTake the longest part of an object (i.e length of a dragon, height of a building), and round up.\nAdd +2 to SM for objects that are uniform in shape. +1 for long, uniformly shaped objects.\n\nA target's Speed and range can provide serious penalties to hit at extreme range and speeds.\n");
+			ImGui::Text("The Speed/Range Table's main measurements are in SM(Size modifier), Yards, and Yards per Second.\n\nSM 0 is human sized target. Smaller targets have a lower SM, and larger targets have higher SM.\nTo find SM, measure the longest part of an object in Yards(Ex: head to tail of a beast).\nThis Linear Measurement is compared on the Speed/Range Table, rounded up, to determine its SM.\nAdd +2 to SM for objects that are uniform in shape. +1 for long, uniformly shaped objects.\n\nA target's Speed and Range can provide serious penalties to hit.\nA fighter jet may be easy to hit standing still on the runway, but it's much harder\nto hit the same jet taking a supersonic flyby a few yards above you.");
 			ImGui::TreePop();
 		}
-		ImGui::Text("\n");
-		ImGui::Text("\n");
+		ImGui::Text("\n\n");
+		
 
 		ImGui::TreePop();
 	}
@@ -961,8 +971,9 @@ void speedrangeTbl()
 		ImGui::Text("__________SPEED_AND RANGE_TABLE_HANDLING_______________________\n");
 
 		ImGui::InputFloat("Target Speed", &speed);
-
-
+		//ImGui::SameLine(); ImGui::Text("%f",table[][speed]);
+		ImGui::SameLine(); ImGui::Text("Speed:%f",speed);
+		ImGui::Text("\n\n");
 
 	}
 
@@ -973,7 +984,7 @@ void speedrangeTbl()
 
 void combatStatusToolAddInfo()
 {
-	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	ImGui::Text("\n          |__________ADDITIONAL_INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information regarding Combat, Select here."))
 	{
 		if (ImGui::TreeNode("FirstHeader"))
@@ -1015,6 +1026,7 @@ void combatStatusTool()
 		//This should also include a Sub-Tab for Postures, if Possible, and their respective modifiers. 
 
 		//Optional:A Range-to-size Table that a user can operate to get a quick reading of the respective modifiers at that specific range.
+		//THIS IS NOW A SEPERATE TOOL.
 
 		//A Tool Designed for Evaluating a PC/NPC's Defensive Capabilities.
 
