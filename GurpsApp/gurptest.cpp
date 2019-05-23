@@ -354,14 +354,14 @@ void successRollAddInfo()
 		if (ImGui::TreeNode("What is a Success Roll?:"))
 		{
 
-			ImGui::Text("A success roll is the backbone of GURPS. When there's a chance of consequential failiure,\nor rewarding success, a Success Roll is the deciding line of such a fate!\n\nThe Success Roll rolls 3 die, against the effective skill in question.\nAs long as the totalled roll is BELOW the effective skill, the roll succeeds.\nNo matter how high or low an effective skill is; rolling 3 or 4 succeeds,\nlikewise, a roll of 17 or 18 fails, no matter how godlike one's skills may be.");
+			ImGui::Text("A success roll is the backbone of GURPS. When there's a chance of consequential failiure,\nor rewarding success, a Success Roll is the deciding line of such a fate!\n\nThe Success Roll rolls 3 die, against the effective skill in question.\nAs long as the totalled roll is BELOW the effective skill, the roll succeeds.\nNo matter how high or low an effective skill is; rolling 3 or 4 succeeds,\nlikewise, a roll of 17 or 18 fails, no matter how godlike one's skills may be.\n\nThe Degree of Success or Failiure is the difference of your roll minus your skill.\nThis is often used to break ties, or to affect very good or poor rolls.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
 
 		if (ImGui::TreeNode("Contest Roll Information:"))
 		{
-			ImGui::Text("For a Quick Contest(ex:Two advenurers lunging for the same shiny artifact);\nBoth contestants roll the same skill with the Success Roll Handler. The Highest roll wins. \n\nThe Degree of success breaks a tie, if that occurs.\nIf both parties have identical degrees of success, no one wins.");
+			ImGui::Text("For a Quick Contest(ex:Two advenurers lunging for the same shiny artifact);\nBoth contestants roll the same skill with the Success Roll Handler. The highest roll wins. \nThe contestant with the highest degree of success breaks a tie.\nIf both parties have identical degrees of success, no one wins.");
 			ImGui::Text("\nRegular Contests(ex:Two politicians at a televised debate);\nAre similar to Quick Contests, but if both parties succeed or fail, they re-roll. \n\nIf both contestants constantly have scored of 6 or less, raise the lower score to 10, \nNext, add that amount to the higher roll and evaluate the winner.\nComplete the opposite process if the two contestant's scores are higher than 14.\n");
 			ImGui::TreePop();
 		}
@@ -389,7 +389,7 @@ void successRollAddInfo()
 void successRoll()
 {
 	//This function handles Success Rolls and is called in the Main program.
-	if (ImGui::CollapsingHeader("Success Roll Handler"))
+	if (ImGui::CollapsingHeader("\nSuccess Roll Handler\n\n"))
 	{
 		srand(time(NULL));
 		static int skill = 10;
@@ -409,33 +409,33 @@ void successRoll()
 		ImGui::SliderInt("Modifier(Success)", &modifier0, -10, 10);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your chance of success\ncan be more or less favorable. \n\nThis modifier fine tunes your effective skill,\nwhich will modify your final rolled value.\n(Ex: -5 to your Running skill as your\nfoe has greased your escape path) \n\nAll Equipment and situational\nmodifiers can be tallied up here.");
 		//If you want to change the values of the roll directly, enable the slider below for debug.
-		ImGui::SliderInt("DEBUG: RollValue", &roll, 3, 18);
+		//ImGui::SliderInt("DEBUG: RollValue", &roll, 3, 18);
 		
 		if (ImGui::Button("Roll 3d."))
 		    roll = rollMultipleDie(3);
 			degree = ((skill + modifier0) - roll);
 			result = success(skill, modifier0, roll);
 		
-		ImGui::Text("RESULTS");
+		ImGui::Text("          |__________SUCCESS_ROLL_RESULTS__________|");
 		ImGui::Separator();
-		ImGui::Text("Current 3d Roll: %d", roll);
-		ImGui::Text("Final roll Value: %d", (roll+modifier0));
-		ImGui::Text("Textual Results of Sucess Roll:");
+		ImGui::Text("          Current 3d Roll: %d", roll);
+		ImGui::Text("          Final roll Value: %d", (roll+modifier0));
+		ImGui::Text("          Textual Results of Sucess Roll:");
 		if (result == 1)
 		{
-			ImGui::Text("Disaster! You Critically Failed this roll.\nThe Degree of Success or Failiure was: %d", degree);
+			ImGui::Text("          Disaster! You Critically Failed this roll.\n          The Degree of Success or Failiure was: %d", degree);
 		}
 		else if (result == 2)
 		{
-			ImGui::Text("Ouch! You Failed this roll.\nThe Degree of Success or Failiure was: %d", degree);
+			ImGui::Text("          Ouch! You Failed this roll.\n          The Degree of Success or Failiure was: %d", degree);
 		}
 		else if (result == 3)
 		{
-			ImGui::Text("Good! You Succeeded in this roll.\nThe Degree of Success or Failiure was: %d", degree);
+			ImGui::Text("          Good! You Succeeded in this roll.\n          The Degree of Success or Failiure was: %d", degree);
 		}
 		else if (result == 4)
 		{
-			ImGui::Text("Great! You Critically Succeeded in this roll.\nThe Degree of Success or Failiure was: %d", degree);
+			ImGui::Text("          Great! You Critically Succeeded in this roll.\n          The Degree of Success or Failiure was: %d", degree);
 		}
 		ImGui::Text("\n\n");
 	}
@@ -448,7 +448,7 @@ void successRoll()
 void reactionRolls()
 {
 
-	if (ImGui::CollapsingHeader("(GM)Reaction Rolls: "))
+	if (ImGui::CollapsingHeader("\n(GM)Reaction Rolls: \n\n"))
 	{
 		//Swiftly and clearly handles reaction rolls. 
 		static int modifier2 = 0;
@@ -510,7 +510,7 @@ void reactionRolls()
 void damageRollAddInfo()
 {
 	ImGui::Text("\n          |__________ADDITIONAL_INFORMATION__________|\n");
-	if (ImGui::TreeNode("For more information regarding Combat, Select here.\n This information just might save your PC."))
+	if (ImGui::TreeNode("For more information regarding Combat and sustaining Injury, Select here.\n This information just might save your PC."))
 	{
 		if (ImGui::TreeNode("Basic Combat Flow and Turn sequence:"))
 		{
@@ -558,20 +558,43 @@ void damageRollAddInfo()
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
-		if (ImGui::TreeNode("Non-Fatal Injury and You: When the Dog Bites/Bee Stings."))
+		if (ImGui::TreeNode("Injury and You: When the Dog Bites/Bee Stings."))
 		{
-			ImGui::Text("Your HP is determined by your Strength, one to one.\nYou will take damage if your opponent's attack penetrates completely through your DR.\nThe Penetrated damage is then modified by the weapon's wounding modifier.\n\nAny penetrated attack is devastating to you or an NPC's combat effectiveness.\n");
-			ImGui::BulletText("If you have less than 1/3 of your HP, you're badly wounded, Move and Dodge are halved.\n");
-			ImGui::BulletText("If you have lost HP during a Turn, you are briefly in Shock for your next turn.\nYour DX and IQ for the next turn will be reduced in equal measure to HP loss, up to -4.\nShock doesn't penalize active defensive manuvers, but it will cripple other skils briefly.");
-			ImGui::BulletText("If you sustain a single injury more than 1/2 of your HP in most situations,\n or a body part is injured to the point of crippling, you have a Major Wound.\nTo avoid knockdown and stun from such a grave injury, Take an HT Roll. \nThe HT roll is taken at HT-5 for face, Male groin, or vitals, (and the Male groin),\n HT-10 if wounded in the Skull or Eye, HT+3 and HT-4 for High and Low Pain Threshold.\n If the HT roll failed, you are stunned. Fall prone and drop anything you were carrying.\nWith a degree of failiure greater than 5, you fall unsconsious.");
-			ImGui::BulletText("if you have 0 or less HP, you are in danger of Collapse.\nOn your next turn, make an HT roll at -1 of every full multiple of HP below 0.\nIf Successful, you proceed as usual, but you must continue succeeding to stay in battle.\nIf you Do Nothing, you only need to roll to do any other action to remain conscious.\nIf you fail the HT roll, you fall unconscious.");
+			
+			ImGui::Text("Your HP is determined by your Strength, and can be augmented by spending character points.\nYou will take damage if your opponent's attack penetrates completely through your DR.\nThe Penetrated damage is then modified by the weapon's wounding modifier.\n\nAny penetrated attack is devastating to you or an NPC's combat effectiveness.\n");
+			if (ImGui::TreeNode("Taking Injury:\n\n"))
+			{
+			ImGui::BulletText("If you have less than 1/3 of your HP, you're badly wounded, Move and Dodge are halved.\n\n");
+			
+			ImGui::BulletText("If you have lost HP during a Turn, you are briefly in Shock for your next turn.\nYour DX and IQ for the next turn will be reduced in equal measure to HP loss, up to -4.\nShock doesn't penalize active defensive manuvers, but it will cripple other skils briefly.\n\n");
+			ImGui::TreePop();
+			}
+			//ImGui::Text("Crippling Injury:");
+			if (ImGui::TreeNode("Crippling Injury:\n\n"))
+			{
+				ImGui::BulletText("If you use hit locations, injury to a limb past a certain HP threshold cripples it.\nArms and Legs are cripped past a victim's HP/2, Heads/Hands at HP/3, and Eyes at HP/10.\nIf you have more limbs than usual, their crippling threshold is HP/(1.5 * #of Limbs).\n\n");
+				ImGui::BulletText("A limb injury will never cause HP damage past the minimum HP to cripple it.\nFor example, if a character has 10HP, and their foot is crushed by an Anvil for 6 damage, \nthe victim only loses 4HP, but the victim's foot is injured almost beyond repair.\nThere is a grim exception to this rule. Eye injuries do NOT have a damage limit.\nIf a body part is injured beyond TWICE the crippling threshold, it is gone forever.\n\n");
+				ImGui::BulletText("If you have received a crippling injury, make an HT roll at the end of Combat.\nIf the the HT roll Succeeds, your injury is Temporary.\nIf you fail, your injury is Lasting, and will take a long time to heal.\nIf you have critically failed, it's Permanent. You lose function of the body part forever.\nIf your Crippling injury is temporary, you suffer its penalties until your HP is full.\nIf Lasting, roll 3d for the number of months it takes to fully heal outside of treatment.\nPermanent crippling gives you a new disadvantage with no character point bonuses.\n\n");
+				ImGui::TreePop();
+			}
+			//ImGui::BulletText("\n\n");
+			//ImGui::Text("");
+			//ImGui::Text("Major Wounds:");
+			if (ImGui::TreeNode("Major Wounds:\n\n"))
+			{
+			ImGui::BulletText("If you sustain a single injury more than 1/2 of your HP in most situations,\nor a body part is Crippled, you have a Major Wound, and you are in trouble.\nTo avoid knockdown and stun from such a grave injury, Take an HT Roll. \nThe HT roll is taken at HT-5 for injuries to the face, Male groin, or vitals. \nRoll to avoid knockdown at HT-10 if wounded in the Skull or Eye.\nRoll to avoid knockdown at HT+3 and HT-4 for High and Low Pain Threshold, respectively.\nIf the HT roll failed, you are stunned. Fall prone and drop anything you were carrying.\nWith a degree of failiure greater than 5, you fall unsconsious. When stunned, you can take Defense Rolls at -4.\nTo recover from a stun, roll against HT. If successful, you recover. If not, Do Nothing,\n but you can attempt another HT roll to recover on your next turn.\n\n");
+
+			ImGui::BulletText("if you have 0 or less HP, you are in danger of Collapse.\nOn your next turn, make an HT roll at -1 of every full multiple of HP below 0.\nIf Successful, you proceed as usual, but you must continue succeeding to stay in battle.\nIf you Do Nothing, you can focus on remaining conscious, and won't need to roll.\nIf you fail the HT roll, you fall unconscious.\n\n");
+			ImGui::TreePop();
+			}
+
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
 		if (ImGui::TreeNode("Mortal Injury: Knocking on Heaven's Door."))
 		{
-			ImGui::Text("If you are here, you have suffered injuries that total more than -1x your HP; Good Luck.\nThe effects of injuries stated above still apply, like HT rolls to stay lucid.");
-			ImGui::BulletText("Once you are injured to -1x HP, make an HT roll. If you fail, you die. \nAt a degree of failiure of -1 or -2 you may cheat death, but you are still dying.");
+			ImGui::Text("If you are here, you have suffered injuries that total more than -1x your HP; Good Luck.\nThe effects of injuries stated above still apply, such as HT rolls to stay conscious.");
+			ImGui::BulletText("Once you are injured to -1x HP, make an HT roll. If you fail, you die. That's it. \nAt a degree of failiure of -1 or -2 you may cheat death, but you are still dying.");
 			ImGui::TreePop();
 		}
 		//We Could really use a Tooltip on Dying. Worded so that it applies to both PC's and NPCs. 
@@ -597,7 +620,7 @@ void damageRoll()
 {
 	//Arguably the most complicated of the bunch. When complete, this function handles rolling for damage,
 	//Given the statistics of a character's weapon, and, when they take damage, how much their DR Absorbs or gets penetrated. 
-	if (ImGui::CollapsingHeader("Damage Roll Handler"))
+	if (ImGui::CollapsingHeader("\nDamage Roll Handler\n\n"))
 	{
 		
 		ImGui::Text("When your attack strikes, use these tools to determine the damage output. \nIf you take damage, this tool also determine how much damage to your HT you have taken. \n\n\nFor additional details See Page 369-374 of Gurps 4e Basic Set: Campaigns");
@@ -963,7 +986,7 @@ void speedrangeTbl()
 	//
 	//_________U I INTERFACE BEGINS HERE:__________________
 	//
-	if (ImGui::CollapsingHeader("Speed/Range Table Tool"))
+	if (ImGui::CollapsingHeader("\nSpeed/Range Table Tool\n\n"))
 	{
 		ImGui::Text("Confused on how to use the ubiquitous Speed/Range Table? Calculate the results easily here!");
 		speedrangeTblAddInfo();
@@ -1010,7 +1033,7 @@ void combatStatusToolAddInfo()
 void combatStatusTool()
 {
 
-	if (ImGui::CollapsingHeader("Combat Status Tool"))
+	if (ImGui::CollapsingHeader("\nCombat Status Tool\n\n"))
 	{
 		
 		
@@ -1050,7 +1073,7 @@ void combatStatusTool()
 
 void frightCheckAddInfo()
 {
-	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	ImGui::Text("          |__________ADDITIONAL_INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information regarding the Speed/Range Table, Select here."))
 	{
 		if (ImGui::TreeNode("What is the Speed/Range Table?"))
@@ -1074,7 +1097,7 @@ void frightCheckAddInfo()
 
 void frightCheck()
 {
-	if (ImGui::CollapsingHeader("Fright Check Handler"))
+	if (ImGui::CollapsingHeader("\nFright Check Handler\n\n"))
 	{
 		ImGui::Text("When uncomprehensible horrors or unyielding divinity overwhelms the party,\nrefer to the Fright Check Table to determine their fate!");
 
@@ -1091,12 +1114,12 @@ void frightCheck()
 //Here's a Generalized Tool Structure, to make adding additional tools much easier to create.
 void defaultToolAddInfo()
 {
-	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	ImGui::Text("          |__________ADDITIONAL_INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information regarding the Default Tool, Select here."))
 	{
-		if (ImGui::TreeNode("What is the Default Tool?"))
+		if (ImGui::TreeNode("What is the Default Tool Structure?"))
 		{
-			ImGui::Text("Provide a greater decription of the above topic.");
+			ImGui::Text("These Tiered tabs will provide addtional information on the above subject.\n");
 				ImGui::TreePop();
 		}
 		ImGui::Text("\n");
@@ -1116,15 +1139,19 @@ void defaultToolAddInfo()
 
 void defaultTool()
 {
-	if (ImGui::CollapsingHeader("Default Tool Structure"))
+	if (ImGui::CollapsingHeader("Default Tool Structure: \nClick HERE if you are a first time user!\n"))
 	{
-		ImGui::Text("Give a Brief Description of what this tool is and what it does.\n");
+		ImGui::Text("This is the general format of each Tool within the GURPSapp Game Aid.\n\n");
 
 		defaultToolAddInfo();
+		ImGui::Text("\nThe middle portion of each tool has a variety of inputs, as well as descriprive messages\nwhich better define their use within the tool.");
+		ImGui::Text("Hover over the (Info) marker to reveal these further details.\n");
+		ImGui::SameLine(); GURPS_ShowHelpMarker("This is an (Info) Marker. It will give a description \nor additional information about a certain input.");
 
-
-		ImGui::Text("Place the tools in the area beneath the Additional Information Tab.\n");
-
+		
+		ImGui::Text("\n\n          |__________TOOL_STRUCTURE_RESULTS__________|");
+		ImGui::Separator();
+		ImGui::Text("\n          Most returned results or outputs will appear towards the bottom of the Header.\n          Every returned result has a seperating line defined beneath it.\n          They are generally indented to distance them from other onscreen data.");
 		ImGui::Text("\n\n");
 	}
 }

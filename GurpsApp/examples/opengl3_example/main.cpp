@@ -137,10 +137,12 @@ int main(int, char**)
 			
 		//}
 		
+		//Each Function below calls the presence of collapsible headers that are used in the Game Aid.
+
+		//Debug Tool for demonstrating Tool structure.
+		defaultTool();
 
 		successRoll();
-
-		speedrangeTbl();
 
 		damageRoll();
 
@@ -150,8 +152,9 @@ int main(int, char**)
 
 		reactionRolls();
 
-		//Debug Tool for demonstrating Tool structure.
-		defaultTool();
+		speedrangeTbl();
+
+		
 		
 		ImGui::End();
 		//END MENU THINGS
