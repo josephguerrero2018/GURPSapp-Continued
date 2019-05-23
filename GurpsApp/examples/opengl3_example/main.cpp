@@ -144,9 +144,14 @@ int main(int, char**)
 
 		damageRoll();
 
-		//combatStatusTool();
+		combatStatusTool();
+
+		frightCheck();
 
 		reactionRolls();
+
+		//Debug Tool for demonstrating Tool structure.
+		defaultTool();
 		
 		ImGui::End();
 		//END MENU THINGS

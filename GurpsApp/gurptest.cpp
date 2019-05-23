@@ -1017,6 +1017,7 @@ void combatStatusTool()
 
 		ImGui::Text("To assist in combat, use this toolset to keep tactical information at hand. \nSelect Various status affects and manuvers to Remain on top of your game. \n\n\nFor additional details See Page FIND APPROPRIATE PAGES of Gurps 4e Basic Set: Campaigns");
 		
+		combatStatusToolAddInfo();
 
 		ImGui::Text("THIS SECTION IS UNFINISHED");
 
@@ -1045,5 +1046,104 @@ void combatStatusTool()
 
 	
 };
+
+
+void frightCheckAddInfo()
+{
+	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	if (ImGui::TreeNode("For more information regarding the Speed/Range Table, Select here."))
+	{
+		if (ImGui::TreeNode("What is the Speed/Range Table?"))
+		{
+			ImGui::Text("When you encounter Ranged Combat, A target's Size, Speed, and Range can modify your chances to hit.\n\nFor example, a broadside of a barn is easier to hit with a projectile weapon,\nbut, knocking the hat off of a train conductor as it speeds by is much harder.\nThis table ensures you can evaluate your chance to hit modifiers effieciently.");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		
+		if (ImGui::TreeNode("Modifiers to the Speed/Range Table."))
+		{
+			ImGui::Text("The Speed/Range Table's main measurements are in SM(Size modifier), Yards, and Yards per Second.\n\nSize Modifier changes your chance to hit. SM 0 is a human sized target. To find the SM of an object,\nTake the longest part of an object (i.e length of a dragon, height of a building), and round up.\nAdd +2 to SM for objects that are uniform in shape. +1 for long, uniformly shaped objects.\n\nA target's Speed and range can provide serious penalties to hit at extreme range and speeds.\n");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		ImGui::Text("\n");
+
+		ImGui::TreePop();
+	}
+}
+
+void frightCheck()
+{
+	if (ImGui::CollapsingHeader("Fright Check Handler"))
+	{
+		ImGui::Text("When uncomprehensible horrors or unyielding divinity overwhelms the party,\nrefer to the Fright Check Table to determine their fate!");
+
+		frightCheckAddInfo();
+
+
+		ImGui::Text("Place the tools in the area beneath the Additional Information Tab.\n");
+
+		ImGui::Text("\n\n");
+	}
+
+}
+
+//Here's a Generalized Tool Structure, to make adding additional tools much easier to create.
+void defaultToolAddInfo()
+{
+	ImGui::Text("__________ADDITIONAL_INFORMATION_______________________\n");
+	if (ImGui::TreeNode("For more information regarding the Default Tool, Select here."))
+	{
+		if (ImGui::TreeNode("What is the Default Tool?"))
+		{
+			ImGui::Text("Provide a greater decription of the above topic.");
+				ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+		
+		if (ImGui::TreeNode("More Useful Information."))
+		{
+			ImGui::Text("Provide a greater decription of the above topic.");
+			ImGui::TreePop();
+		}
+		ImGui::Text("\n");
+
+
+		ImGui::Text("\n");
+		ImGui::TreePop();
+	}
+}
+
+void defaultTool()
+{
+	if (ImGui::CollapsingHeader("Default Tool Structure"))
+	{
+		ImGui::Text("Give a Brief Description of what this tool is and what it does.\n");
+
+		defaultToolAddInfo();
+
+
+		ImGui::Text("Place the tools in the area beneath the Additional Information Tab.\n");
+
+		ImGui::Text("\n\n");
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
