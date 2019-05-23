@@ -27,8 +27,10 @@ int main(int, char**)
 #if __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-    GLFWwindow* window = glfwCreateWindow(795, 950, "ImGui GURPSapp Game Aid Using OpenGL3", NULL, NULL);
-    glfwMakeContextCurrent(window);
+    //GLFWwindow* window = glfwCreateWindow(795, 950, "ImGui GURPSapp Game Aid Using OpenGL3", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(970, 950, "ImGui GURPSapp Game Aid Using OpenGL3", NULL, NULL);
+
+	glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
     gl3wInit();
 
@@ -55,6 +57,7 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
+	io.Fonts->AddFontFromFileTTF("../../misc/fonts/Inconsolata-Regular.ttf", 19.8f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
 
@@ -62,7 +65,8 @@ int main(int, char**)
 	//bool show_demo_window = true;
 
     bool show_another_window = false;
-	bool my_tool_active = true;
+	//bool my_tool_active = true;
+	bool my_tool_active = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Main loop
@@ -108,17 +112,18 @@ int main(int, char**)
         // 3. Show the ImGui demo window. Most of the sample code is in ImGui::ShowDemoWindow(). Read its code to learn more about Dear ImGui!
         if (show_demo_window)
         {
-            ImGui::SetNextWindowPos(ImVec2(650, 60), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
+            ImGui::SetNextWindowPos(ImVec2(680, 75), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
             ImGui::ShowDemoWindow(&show_demo_window);
         }
 
 		//BEGIN MENU THING FOR PROJECT
 
-		//ImGui::SetNextWindowSize(ImVec2(570, 680), ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(600, 500), ImGuiCond_FirstUseEver);
-		ImGui::SetNextWindowPos(ImVec2(660, 0), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(530, 640), ImGuiCond_FirstUseEver);
+		//ImGui::SetNextWindowSize(ImVec2(600, 500), ImGuiCond_FirstUseEver);
+		//ImGui::SetNextWindowPos(ImVec2(660, 0), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 		ImGui::Begin("GURPSapp Roleplaying Toolset", &my_tool_active, ImGuiWindowFlags_MenuBar);
-		ImGui::Text(" GURPS is a trademark of Steve Jackson Games, and its rules and art are \n copyrighted by Steve Jackson Games. This game aid is the original creation of Joseph Guerrero\n and is released for free distribution, and not for resale, under the permissions granted \n in the Steve Jackson Games Online Policy: http://www.sjgames.com/general/online_policy.html");
+		ImGui::Text(" GURPS is a trademark of Steve Jackson Games, and its rules and art are copyrighted by \nSteve Jackson Games. This game aid is the original creation of Joseph Guerrero and is released for \nfree distribution, and not for resale, under the permissions granted in the Steve Jackson Games\n Online Policy. Access this with the link: http://www.sjgames.com/general/online_policy.html");
 		ImGui::Text("\nFor more information, Be sure to purchase the GURPS 4th Edition Basic Set, Campaigns and Characters.");
 		
 		//if (ImGui::BeginMenuBar())

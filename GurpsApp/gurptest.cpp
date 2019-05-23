@@ -410,17 +410,19 @@ void successRoll()
 		ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your chance of success\ncan be more or less favorable. \n\nThis modifier fine tunes your effective skill,\nwhich will modify your final rolled value.\n(Ex: -5 to your Running skill as your\nfoe has greased your escape path) \n\nAll Equipment and situational\nmodifiers can be tallied up here.");
 		//If you want to change the values of the roll directly, enable the slider below for debug.
 		//ImGui::SliderInt("DEBUG: RollValue", &roll, 3, 18);
-		
-		if (ImGui::Button("Roll 3d."))
+		ImGui::SameLine(); ImGui::Text("          ");
+		if (ImGui::Button("\n          Click to Roll \n\n"))
 		    roll = rollMultipleDie(3);
 			degree = ((skill + modifier0) - roll);
 			result = success(skill, modifier0, roll);
+		ImGui::SameLine(); ImGui::Text("\n3d+%d", modifier0);
+			//3d + %d
 		
 		ImGui::Text("          |__________SUCCESS_ROLL_RESULTS__________|");
 		ImGui::Separator();
 		ImGui::Text("          Current 3d Roll: %d", roll);
 		ImGui::Text("          Final roll Value: %d", (roll+modifier0));
-		ImGui::Text("          Textual Results of Sucess Roll:");
+		ImGui::Text("          Textual Results of Success Roll:");
 		if (result == 1)
 		{
 			ImGui::Text("          Disaster! You Critically Failed this roll.\n          The Degree of Success or Failiure was: %d", degree);
@@ -659,7 +661,7 @@ void damageRoll()
 			static int meleeMod = 0;
 			const char* damMelee[] = { "Swing", "Thrust" };
 			//Melee Modifier
-			if (ImGui::Button("Select Melee Damage Type"))
+			if (ImGui::Button("Select Melee Damage Type\n\n"))
 				ImGui::OpenPopup("selectMelee");
 			ImGui::SameLine();
 			ImGui::TextUnformatted(selected_Melee == -1 ? "<None Selected>" : damMelee[selected_Melee]);
@@ -681,7 +683,7 @@ void damageRoll()
 
 			
 			
-			if (ImGui::Button("Apply Melee Damage Attributes:"))
+			if (ImGui::Button("\nApply Melee Damage Attributes:\n\n"))
 			{
 				dam_Modifier = (DamageTableMod(pcStrength, damMelee[selected_Melee]) + meleeMod);
 				numDie = DamageTableDie(pcStrength, damMelee[selected_Melee]);
@@ -705,11 +707,12 @@ void damageRoll()
 		
 		
 
-
+		
+		//Tight beam Burning has a lot of different properties to account for, so it won't be included fro the time being.
 		//WEAPON EFFECT HANDLING
-		ImGui::Text("\nEnter the Wounding Modifer of the weapon you are using here.");
-		const char* damType[] = { "Small piercing(pi-)", "Piercing(pi)", "Large Piercing(pi+)", "Huge Piercing(pi++)", "Cutting(cut)" , "Impaling(imp)","Burning(burn)", "Corrosion(cor)", "Crushing(cr)", "Fatigue(fat)", "Toxic(tox)"};
-		if (ImGui::Button("Select Wounding Modifer of Selected Weapon:"))
+		ImGui::Text("\nEnter the Wounding Modifer of the weapon you are using here.\nNote: Tight Beam Burning is not represented here. For that Modifier, see Page 399, 433, and 434.");
+		const char* damType[] = { "Small piercing(pi-)", "Piercing(pi)", "Large Piercing(pi+)", "Huge Piercing(pi++)", "Cutting(cut)" , "Impaling(imp)","Burning(burn)","Corrosion(cor)", "Crushing(cr)", "Fatigue(fat)", "Toxic(tox)"};
+		if (ImGui::Button("Select Wounding Modifer of Selected Weapon:\n\n"))
 			ImGui::OpenPopup("select");
 		ImGui::SameLine();
 		ImGui::TextUnformatted(selected_DMG == -1 ? "<None>" : damType[selected_DMG]);
@@ -727,7 +730,7 @@ void damageRoll()
 		ImGui::Text("Round Fractions of Damage Down. Minimum Penatrative Damage: 1HP.");
 
 		//
-		if (ImGui::Button("Roll For Basic Damage:"))
+		if (ImGui::Button("\n          Click to Roll for Basic Damage: \n\n"))
 		{
 			dam_roll = (rollMultipleDie(numDie));
 		}
@@ -754,13 +757,13 @@ void damageRoll()
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Check this box to use the Basic Damage and weapon properties you Evaluated Above.");
 		if (useRoll == true)
 		{
-			ImGui::Text("You are using your own Basic Damage Roll to measure penetrated Damage.");
+			ImGui::Text("You are using your own Basic Damage Roll to measure penetrated Damage.\n\n");
 			
 			raw_damage_eval = raw_damage;
 		}
 		else 
 		{
-			ImGui::Text("You Must Enter the amount of Basic Damage you,\nor an enemy, has dealt to measure penetrated damage.\nDO NOT forget to include the Wounding Modifier Below.");
+			ImGui::Text("Enter the amount of Basic Damage you, or an enemy, has dealt to measure penetrated damage.\nDO NOT forget to include the Wounding Modifier of the selected weapon Below.");
 			ImGui::InputInt("Basic Damage", &raw_damage_eval);
 			ImGui::SameLine(); GURPS_ShowHelpMarker("This is the Direct amount of damage Dealt by you or an opponent's attack.\n(Example: The DM says you took, say, 16 Damage.)\nIf you want to use the roll from earlier, check the box above.");
 			
@@ -897,7 +900,7 @@ void damageRoll()
 
 		}
 		ImGui::Text("\n");
-		ImGui::Text("          |__________FINAL_RESULTS_OF_DAMAGE_HANDLER__________");
+		ImGui::Text("          |__________FINAL_RESULTS_OF_DAMAGE_HANDLER__________|");
 		ImGui::Separator();
 		ImGui::Text("            Current HP DAMAGE PREVENTED:%d", absorbed_damage);
 		ImGui::Text("\n          Current HP DAMAGE PENETRATED TO VICTIM:%d", pen_damage);
@@ -1115,7 +1118,7 @@ void frightCheck()
 void defaultToolAddInfo()
 {
 	ImGui::Text("          |__________ADDITIONAL_INFORMATION__________|\n");
-	if (ImGui::TreeNode("For more information regarding the Default Tool, Select here."))
+	if (ImGui::TreeNode("Most Tools have a section with additional info. Select here to expand it."))
 	{
 		if (ImGui::TreeNode("What is the Default Tool Structure?"))
 		{
@@ -1126,7 +1129,7 @@ void defaultToolAddInfo()
 		
 		if (ImGui::TreeNode("More Useful Information."))
 		{
-			ImGui::Text("Provide a greater decription of the above topic.");
+			ImGui::Text("Some of these tabs may be quite the read, but, their info can be essential.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
