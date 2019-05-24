@@ -57,7 +57,8 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
-	io.Fonts->AddFontFromFileTTF("../../misc/fonts/Inconsolata-Regular.ttf", 19.8f);
+	//NEW FONT MAY RECOMPILE IMPROPERLY.
+	io.Fonts->AddFontFromFileTTF("../../misc/fonts/Inconsolata-Regular.ttf", 17.2f);
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
 
@@ -118,7 +119,7 @@ int main(int, char**)
 
 		//BEGIN MENU THING FOR PROJECT
 
-		ImGui::SetNextWindowSize(ImVec2(530, 640), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(580, 640), ImGuiCond_FirstUseEver);
 		//ImGui::SetNextWindowSize(ImVec2(600, 500), ImGuiCond_FirstUseEver);
 		//ImGui::SetNextWindowPos(ImVec2(660, 0), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
