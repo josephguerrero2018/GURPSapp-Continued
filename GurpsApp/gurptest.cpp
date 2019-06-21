@@ -392,6 +392,12 @@ void successRoll()
 	if (ImGui::CollapsingHeader("\nSuccess Roll Handler\n\n"))
 	{
 		srand(time(NULL));
+		static bool is_CombatRoll = false;
+		static bool is_ATK = false;
+		static bool is_DEF = false;
+		const char* manuverArrayATK[] = { "All-Out Attack:Melee", "Thrust" };
+		const char* manuverArrayDEF[] = { "All out Defense", "Thrust" };
+		//
 		static int skill = 10;
 		static int modifier0 = 0;
 		static int roll = 10;
@@ -403,25 +409,69 @@ void successRoll()
 		successRollAddInfo();
 		//to preserve the clarity of the function, I'm moving the texty bits into seperate functions.
 		
-		ImGui::Text("\n__________SUCCESS_ROLL_INPUT_______________________\n");
-		ImGui::SliderInt("Skill", &skill, 0, 20); ImGui::SameLine(150);
+		//
+		ImGui::Text("\n__________SUCCESS ROLL INPUT_______________________\n");
+
+		////
+
+		/*
+		ImGui::Checkbox("Apply Modifiers for Combat Manuvers: Attack and Defense", &is_CombatRoll);
+		if (is_CombatRoll == true)
+		{
+			int selected_manuver = -1;
+			//
+
+			//STILL NEED TO FINISH THE MELEE MANUVERS HERE FIRST.
+
+			//
+			if (ImGui::Button("Select Combat Manuver Modifier\n\n"))
+				ImGui::OpenPopup("selectManuver");
+			ImGui::SameLine();
+			//NEED TO HAVE MULTIPLE SELECTABLE ARRAYS WITH ATTEMPTS AT SOME
+			//WAY TO SIMPLIFY CONVERSION OF TEXT TO VALUES IN A 2D ARRAY?
+			ImGui::TextUnformatted(selected_manuver == -1 ? "<None Selected>" : manuverArray[selected_manuver]);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Use this to quickly apply bonuses or penalties \nfrom a fine selection of Combat Manuvers. \n");
+
+			if (ImGui::BeginPopup("selectManuver"))
+			{
+				ImGui::Text("Selected Manuver:");
+				ImGui::Separator();
+				for (int k = 0; k < IM_ARRAYSIZE(manuverArray); k++)
+					if (ImGui::Selectable(manuverArray[k]))
+						selected_manuver = k;
+
+				ImGui::EndPopup();
+			}
+
+		}
+		*/
+
+		ImGui::Text("\n\n");
+		//Primary Controls for Success Roll:
+		//ImGui::SliderInt("Skill", &skill, 0, 20); ImGui::SameLine(150);
+		ImGui::SliderInt("Skill", &skill, 0, 20); //ImGui::SameLine(50);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Slide in the highest skill or attribute to roll against. \nIf you are rolling against an Attribute(HT,IQ,ST) more that 20, treat it as 20.");
 		ImGui::SliderInt("Modifier(Success)", &modifier0, -10, 10);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your chance of success\ncan be more or less favorable. \n\nThis modifier fine tunes your effective skill,\nwhich will modify your final rolled value.\n(Ex: -5 to your Running skill as your\nfoe has greased your escape path) \n\nAll Equipment and situational\nmodifiers can be tallied up here.");
 		//If you want to change the values of the roll directly, enable the slider below for debug.
 		//ImGui::SliderInt("DEBUG: RollValue", &roll, 3, 18);
 		ImGui::SameLine(); ImGui::Text("          ");
-		if (ImGui::Button("\n          Click to Roll \n\n"))
+		if (ImGui::Button("\n     Click to Roll   \n\n"))
 		    roll = rollMultipleDie(3);
 			degree = ((skill + modifier0) - roll);
 			result = success(skill, modifier0, roll);
-		ImGui::SameLine(); ImGui::Text("\n3d+%d", modifier0);
+		//ImGui::SameLine(300);
+		//ImGui::SameLine(); ImGui::Text("\nCurrent Roll is 3d+ %d\n", modifier0);
+		ImGui::SameLine(); ImGui::Text("\nCurrent Roll is 3d+ %d\n", modifier0);
 			//3d + %d
 		
-		ImGui::Text("          |__________SUCCESS_ROLL_RESULTS__________|");
+
+
+
+		ImGui::Text("\n          |__________SUCCESS ROLL RESULTS__________|");
 		ImGui::Separator();
-		ImGui::Text("          Current 3d Roll: %d", roll);
-		ImGui::Text("          Final roll Value: %d", (roll+modifier0));
+		ImGui::Text("          Current Dice Total: %d", roll);
+		ImGui::Text("          Success Roll Value: %d", (roll+modifier0));
 		ImGui::Text("          Textual Results of Success Roll:");
 		if (result == 1)
 		{
@@ -461,11 +511,11 @@ void reactionRolls()
 		ImGui::Text("Roll 3 Die to determine the impressions of the NPC(s) to the PC(s). \n See Page 560 of Gurps 4e Basic Set: Campaigns");
 		ImGui::SliderInt("Modifier(Rec)", &modifier2, -10, 10);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("To apply other biases of the NPC(s) involved,\nuse the slider to give advantage or disadvantage to the roll. \n most advantages or disadvantages are from 1 to 3.");
-		ImGui::Text("__________REACTION_ROLL_INPUT_______________________\n");
-		if (ImGui::Button("Roll 3d to Make Reaction Roll."))
+		ImGui::Text("__________REACTION ROLL INPUT_______________________\n");
+		if (ImGui::Button("\n          Roll 3d to Make Reaction Roll.\n\n"))
 			reaction = rollMultipleDie(3) + modifier2;
 		
-		ImGui::Text("Current Reaction Roll: %d", reaction);
+		ImGui::Text("Current Reaction Roll: %d\n", reaction);
 		//ImGui::Text("Textual Results of Reaction Roll: %s", toolText);
 		ImGui::Text("RESULTS");
 		ImGui::Separator();
@@ -511,7 +561,7 @@ void reactionRolls()
 
 void damageRollAddInfo()
 {
-	ImGui::Text("\n          |__________ADDITIONAL_INFORMATION__________|\n");
+	ImGui::Text("\n          |__________ADDITIONAL INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information regarding Combat and sustaining Injury, Select here.\n This information just might save your PC."))
 	{
 		if (ImGui::TreeNode("Basic Combat Flow and Turn sequence:"))
@@ -599,8 +649,7 @@ void damageRollAddInfo()
 			ImGui::BulletText("Once you are injured to -1x HP, make an HT roll. If you fail, you die. That's it. \nAt a degree of failiure of -1 or -2 you may cheat death, but you are still dying.");
 			ImGui::TreePop();
 		}
-		//We Could really use a Tooltip on Dying. Worded so that it applies to both PC's and NPCs. 
-		//A good explanation of the process is on page 380 of the Gurps basic Set: Campaigns.
+		
 
 		//This Information set is SUPER long, but if you want more neatly nested text, use this default text pile.
 		/*
@@ -649,7 +698,7 @@ void damageRoll()
 		
 		//MELEE WEAPON RULES
 		ImGui::Text("\n\n");
-		ImGui::Text("__________MELEE_DAMAGE_HANDLING_______________________\n");
+		ImGui::Text("__________MELEE DAMAGE HANDLING_______________________\n");
 		ImGui::Text("If your Weapon Uses Muscle Power, Select the box below to quicky ready your roll.\nThis includes Thrown weapons, Bows and Crossbows.\n");
 		ImGui::Checkbox("Muscle Powered Weapon Equipped.", &isMelee);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Muscle Powered Weapons have damage based on a PC's Strength,\nDamage Type, and a plus or minus modifier.\nFor example, an Axe deals Swing+2 damage.To enter this, \nset Damage Type to Swing, enter the axe user's Strength,\nand set the Melee Modifier to 2.");
@@ -692,7 +741,7 @@ void damageRoll()
 			//END OF MELEE DAMAGE HANDLING
 		}
 		ImGui::Text("\n");
-		ImGui::Text("__________BASIC_DAMAGE_INPUT_______________________\n");
+		ImGui::Text("__________BASIC DAMAGE INPUT_______________________\n");
 		ImGui::Text("Enter Weapon Table Data");
 		ImGui::SliderInt("(__)d Die", &numDie, 1, 8);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Damage in GURPS is arranged in a Dice + Adds format.\nFor example, for a damage of 3d-2, slide (__)d to 3 dice and subtract 2 from the results using the Melee Modifier below it.");
@@ -713,10 +762,10 @@ void damageRoll()
 		ImGui::Text("\nEnter the Wounding Modifer of the weapon you are using here.\nNote: Tight Beam Burning is not represented here. For that Modifier, see Page 399, 433, and 434.");
 		const char* damType[] = { "Small piercing(pi-)", "Piercing(pi)", "Large Piercing(pi+)", "Huge Piercing(pi++)", "Cutting(cut)" , "Impaling(imp)","Burning(burn)","Corrosion(cor)", "Crushing(cr)", "Fatigue(fat)", "Toxic(tox)"};
 		if (ImGui::Button("Select Wounding Modifer of Selected Weapon:\n\n"))
-			ImGui::OpenPopup("select");
+			ImGui::OpenPopup("woundingSelector");
 		ImGui::SameLine();
 		ImGui::TextUnformatted(selected_DMG == -1 ? "<None>" : damType[selected_DMG]);
-		if (ImGui::BeginPopup("select"))
+		if (ImGui::BeginPopup("woundingSelector"))
 		{
 			ImGui::Text("Wounding Modifer:");
 			ImGui::Separator();
@@ -752,7 +801,7 @@ void damageRoll()
 		static int eval_selected_DMG = -1;
 		//
 		ImGui::Text("\n");
-		ImGui::Text("__________PENETRATIVE_DAMAGE_HANDLING_______________________\n");
+		ImGui::Text("__________PENETRATIVE DAMAGE HANDLING_______________________\n");
 		ImGui::Checkbox("Use Basic Damage AND Wound Modifier from Current Basic Damage Roll", &useRoll);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Check this box to use the Basic Damage and weapon properties you Evaluated Above.");
 		if (useRoll == true)
@@ -900,7 +949,7 @@ void damageRoll()
 
 		}
 		ImGui::Text("\n");
-		ImGui::Text("          |__________FINAL_RESULTS_OF_DAMAGE_HANDLER__________|");
+		ImGui::Text("          |__________FINAL RESULTS OF DAMAGE HANDLER__________|");
 		ImGui::Separator();
 		ImGui::Text("            Current HP DAMAGE PREVENTED:%d", absorbed_damage);
 		ImGui::Text("\n          Current HP DAMAGE PENETRATED TO VICTIM:%d", pen_damage);
@@ -943,7 +992,7 @@ void damageRoll()
 void speedrangeTblAddInfo()
 {
 
-	ImGui::Text("\n          |__________ADDITIONAL_INFORMATION__________|\n");
+	ImGui::Text("\n          |__________ADDITIONAL INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information regarding the Speed/Range Table, Select here."))
 	{
 		if (ImGui::TreeNode("What is the Speed/Range Table?"))
@@ -994,7 +1043,7 @@ void speedrangeTbl()
 		ImGui::Text("Confused on how to use the ubiquitous Speed/Range Table? Calculate the results easily here!");
 		speedrangeTblAddInfo();
 		ImGui::Text("\n\n");
-		ImGui::Text("__________SPEED_AND RANGE_TABLE_HANDLING_______________________\n");
+		ImGui::Text("__________SPEED AND RANGE TABLE HANDLING_______________________\n");
 
 		ImGui::InputFloat("Target Speed", &speed);
 		//ImGui::SameLine(); ImGui::Text("%f",table[][speed]);
@@ -1010,7 +1059,7 @@ void speedrangeTbl()
 
 void combatStatusToolAddInfo()
 {
-	ImGui::Text("\n          |__________ADDITIONAL_INFORMATION__________|\n");
+	ImGui::Text("\n          |__________ADDITIONAL INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information regarding Combat, Select here."))
 	{
 		if (ImGui::TreeNode("FirstHeader"))
@@ -1020,6 +1069,49 @@ void combatStatusToolAddInfo()
 		}
 		ImGui::Text("\n");
 		//ImGui::TreePop();
+		//
+		//These function demonstrations from the Demo should do nicely for future use.
+
+		// General BeginCombo() API, you have full control over your selection data and display type.
+		// (your selection data could be an index, a pointer to the object, an id for the object, a flag stored in the object itself, etc.)
+		//const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
+		//static const char* item_current = items[0];            // Here our selection is a single pointer stored outside the object.
+		//if (ImGui::BeginCombo("combo 1", item_current, flags)) // The second parameter is the label previewed before opening the combo.
+		//{
+		//	for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+		//	{
+		//		bool is_selected = (item_current == items[n]);
+		//		if (ImGui::Selectable(items[n], is_selected))
+		//			item_current = items[n];
+		//		if (is_selected)
+		//			ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+		//	}
+		//	ImGui::EndCombo();
+		//}
+
+		// Simplified one-liner Combo() API, using values packed in a single constant string
+		//static int item_current_2 = 0;
+		//ImGui::Combo("combo 2 (one-liner)", &item_current_2, "aaaa\0bbbb\0cccc\0dddd\0eeee\0\0");
+
+		// Simplified one-liner Combo() using an array of const char*
+		//static int item_current_3 = -1; // If the selection isn't within 0..count, Combo won't display a preview
+		//ImGui::Combo("combo 3 (array)", &item_current_3, items, IM_ARRAYSIZE(items));
+		//This function set has 3 inline floats in it.
+		//static float vec4a[4] = { 0.10f, 0.20f, 0.30f, 0.44f };
+		//ImGui::InputFloat3("input float3", vec4a);
+		//
+
+		//This function might do well for a notes page.
+		//static char str0[128] = "Hello, world!"
+		//ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
+
+
+		// Another very useful Demo of an alternate way to input text.
+		//static char text[1024 * 16] =
+		//"/*\n"
+			//"\tlock cmpxchg8b eax\n";
+
+
 		if (ImGui::TreeNode("Header"))
 		{
 			//ImGui::Text("");
@@ -1076,7 +1168,7 @@ void combatStatusTool()
 
 void frightCheckAddInfo()
 {
-	ImGui::Text("          |__________ADDITIONAL_INFORMATION__________|\n");
+	ImGui::Text("          |__________ADDITIONAL INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information regarding the Speed/Range Table, Select here."))
 	{
 		if (ImGui::TreeNode("What is the Speed/Range Table?"))
@@ -1117,7 +1209,7 @@ void frightCheck()
 //Here's a Generalized Tool Structure, to make adding additional tools much easier to create.
 void defaultToolAddInfo()
 {
-	ImGui::Text("          |__________ADDITIONAL_INFORMATION__________|\n");
+	ImGui::Text("          |__________ADDITIONAL INFORMATION__________|\n");
 	if (ImGui::TreeNode("Most Tools have a section with additional info. Select here to expand it."))
 	{
 		if (ImGui::TreeNode("What is the Default Tool Structure?"))
@@ -1141,7 +1233,39 @@ void defaultToolAddInfo()
 }
 
 void defaultTool()
-{
+{	
+	//I am also using the Default Tool as a sort of test bed for the contents of arrays and functions, 
+	//and how these can be more easily managed by the user.
+	static char* final_1d_resultChr = "Default 1d";
+	static char* final_2d_resultChr = "Default 2d";
+	static char* final_3d_resultChr = "Default 3d";
+	const char* input_Desc[] = { "1/5 Inch or 0.5cm","1/3 Inch or 7.62cm","1/2 Inch or 1.27cm","2/3 Inch or 1.7cm","1 Inch or 2.54cm" "1.5 Inch or 3.8cm",""};
+	static char* OneD_Chr[] = { "A", "B","C","D" };
+	static char* TwoD_Chr[] = {""};
+	static char* ThrD_Chr[] = {""};
+
+	static int final_integerValue = 0;
+
+	static int final_sizeMod = 0;
+	static int final_SMpenalty = 0;
+
+	static float input_SMpenalty = 0;
+	static char* bigBacess = "DEFAULT";
+	static int input_sizeMod = 0;
+	static int baccessSelection = -1;
+	//static float input ;
+
+	static char* input_2d;
+	//I'm mainly attempting to know more about the 2d arrays As far as I know, SpeedRange Table is accurate..
+	static float bigBadTable[46][3] =
+	{
+		{ 0,-15,0.0056 },{ 0,-14,0.00925 },{ 0,-13, 0.01389 },{ 0,-12,0.0185 },{ 0,-11, 0.0277 },{ 0,-10, 0.04167 },{ 0,-9, 0.056 },{ 0,-8, 0.083 },{ 0,-7, 0.1389},{ 0,-6, 0.222 },{ 0,-5, 0.333 },{ 0,-4, 0.5 },{ 0,-3, 0.667 },{ 0,-2, 1 },{ 0,-1, (3 / 2) },{ 0,0, 2 },{ -1,1, 3 },{ -2, 2, 5 },{ -3, 3, 7 },{ -4, 4, 10 },{ -5, 5, 15 },{ -6, 6, 20 },{ -7,7,30 },{ -8,8,50 },{ -9,9,70 },{ -10,10,100 },{ -11,11,150 },{ -12,12,200 },{ -13,13,300 },{ -14,14,500 },{ -15,15,700 },{ -16,16,1000 },{ -17,17,1500 },{ -18,18,2000 },{ -19,19,3000 },{ -20,20,5000 },{ -21,21,7000 },{ -22,22,10000 },{ -23,23,15000 },{ -24,24,20000 },{ -25,25,30000 },{ -26,26,50000 },{ -27,27,70000 },{ -28,28,100000 },{ -29,29,150000 }, {-30,30,200000}
+	};
+	static float selected_firstDimTbl = 0;
+	//static float bigBadArray = bigBadTable[2];
+
+
+
 	if (ImGui::CollapsingHeader("Default Tool Structure: \nClick HERE if you are a first time user!\n"))
 	{
 		ImGui::Text("This is the general format of each Tool within the GURPSapp Game Aid.\n\n");
@@ -1151,10 +1275,53 @@ void defaultTool()
 		ImGui::Text("Hover over the (Info) marker to reveal these further details.\n");
 		ImGui::SameLine(); GURPS_ShowHelpMarker("This is an (Info) Marker. It will give a description \nor additional information about a certain input.");
 
+		//This is some testing I am doing with sliders and multi-dimensional arrays.
+		//
+		//
+		/*
+		ImGui::TextUnformatted(selected_firstDimTbl == -1 ? "<None Selected>" : bigBadTable[selected_Melee]);
+		ImGui::SameLine(); GURPS_ShowHelpMarker("Your melee attack will be a Swing or a Thrust, \nchoose as shown on your weapon's table. \n");
+
+		if (ImGui::BeginPopup("selectMelee"))
+		{
+			ImGui::Text("Damage:");
+			ImGui::Separator();
+			for (int i = 0; i < IM_ARRAYSIZE(bigBadTable); i++)
+				if (ImGui::Selectable(bigBadTable[0]))
+					selected_Melee = i;
+			ImGui::EndPopup();
+		}
+		*/
+		//
+		ImGui::Text("Testing Features here. Ignore the slider and outputs if you wish.\n");
+
+
+		ImGui::Combo("Attempted BigArray Access", &baccessSelection, input_Desc, IM_ARRAYSIZE(input_Desc));
+		ImGui::SliderInt("Input by Size Modifier", &input_sizeMod,-15,30); //ImGui::SameLine(50);
+		ImGui::SliderFloat("Input by Linear Measurement", &input_SMpenalty, (((1 / 5) / 12)), 200000);
+		//ImGui::SliderInt("1d Array Minupation", &OneD_Chr); //ImGui::SameLine(50);
+		//ImGui::SameLine(); GURPS_ShowHelpMarker("Slide in the highest skill or attribute to roll against. \nIf you are rolling against an Attribute(HT,IQ,ST) more that 20, treat it as 20.");
+		//ImGui::SliderInt("Modifier(Success)", &modifier0, -10, 10);
+		//ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your chance of success\ncan be more or less favorable. \n\nThis modifier fine tunes your effective skill,\nwhich will modify your final rolled value.\n(Ex: -5 to your Running skill as your\nfoe has greased your escape path) \n\nAll Equipment and situational\nmodifiers can be tallied up here.");
+		//
+		//
 		
-		ImGui::Text("\n\n          |__________TOOL_STRUCTURE_RESULTS__________|");
+		ImGui::Text("\n\n          |__________TOOL STRUCTURE RESULTS__________|");
 		ImGui::Separator();
 		ImGui::Text("\n          Most returned results or outputs will appear towards the bottom of the Header.\n          Every returned result has a seperating line defined beneath it.\n          They are generally indented to distance them from other onscreen data.");
+		
+		
+		//The Textual results of my testing appear here. comment out in final build.
+		ImGui::Text("          Current Size Modifer: %d", input_sizeMod);
+		ImGui::Text("          Linear Measurement from BigBadTable: %f\n", bigBadTable[input_sizeMod+15][2]);
+		//ImGui::Text("          Linear Measurement from BigBadTable: %f\n", bigBadTable[input_SMpenalty][0]);
+		ImGui::Text("          BacessSelection Value: %d", input_sizeMod);
+		ImGui::Text("          Current 1d Result: %c", final_1d_resultChr);
+		ImGui::Text("          Current 2d Result: %c", final_2d_resultChr);
+		ImGui::Text("          Current 3d Result: %c", final_3d_resultChr);
+		ImGui::Text("          Current integer value: %d", final_integerValue);
+		
+
 		ImGui::Text("\n\n");
 	}
 }
