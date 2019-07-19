@@ -58,6 +58,7 @@ void Popups()
 {
 	//This is PROOF that I can have a sub-tree within the Demo INDEPENDENT 
 	//From the main demo.cpp.
+	//Popups has been modified from the demo as a way to make sure things worked.
 	//This Function is DEFUNCT, but if you wish, throw it into the main to see how the interface interacts.
 	if (ImGui::TreeNode("Popups"))
 	{
