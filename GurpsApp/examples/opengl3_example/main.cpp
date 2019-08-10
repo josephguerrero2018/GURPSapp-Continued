@@ -58,19 +58,11 @@ int main(int, char**)
     // - Read 'misc/fonts/README.txt' for more instructions and details.
     // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
     //ENABLE DEFAULT FONTS FOR RELEASE.
-	io.Fonts->AddFontDefault();
+	//io.Fonts->AddFontDefault();
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
-	//NEW FONT MAY RECOMPILE IMPROPERLY.
-	//ATTEMPING TO MOVE FONT FROM ONE LOCATION TO ANOTHER.
-	//io.Fonts->AddFontFromFileTTF("../../misc/fonts/Inconsolata-Regular.ttf", 17.2f);
-	//ATTEMPTING TO PUT IT DIRECTLY IN Front..
-	//ImFont* font = io.Fonts->AddFontFromMemoryCompressedTTF(Inconsolata-Regular.cpp, compressed_data_size, size_pixels, );(63720/4)
-	ImFont* font = io.Fonts->AddFontFromMemoryCompressedTTF(inCon_fontTest_compressed_data, inCon_fontTest_compressed_size,17.2f );
-	//io.Fonts->AddFontFromFileTTF("../../Inconsolata-Regular.ttf", 17.2f);
-	//ImFont* font = io.Fonts->AddFontFromFileTTF("../../misc/fonts/Inconsolata-Regular.ttf", 17.2f);
+    
+	//ImFont* Inconsolata = io.Fonts->AddFontFromMemoryCompressedTTF(inCon_fontTest_compressed_data, inCon_fontTest_compressed_size, 17.2f);
+	ImFont* Inconsolata = io.Fonts->AddFontFromMemoryCompressedTTF(inCon_fontTest_compressed_data, inCon_fontTest_compressed_size, 19.6f);
 
 	//ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
