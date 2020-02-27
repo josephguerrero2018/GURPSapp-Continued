@@ -30,7 +30,7 @@ int main(int, char**)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
     //GLFWwindow* window = glfwCreateWindow(795, 950, "ImGui GURPSapp Game Aid Using OpenGL3", NULL, NULL);
-	GLFWwindow* window = glfwCreateWindow(970, 950, "ImGui GURPSapp Game Aid Using OpenGL3", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(975, 950, "ImGui GURPSapp Game Aid Using OpenGL3", NULL, NULL);
 
 	glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
@@ -61,8 +61,8 @@ int main(int, char**)
 	//io.Fonts->AddFontDefault();
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
     
-	//ImFont* Inconsolata = io.Fonts->AddFontFromMemoryCompressedTTF(inCon_fontTest_compressed_data, inCon_fontTest_compressed_size, 17.2f);
-	ImFont* Inconsolata = io.Fonts->AddFontFromMemoryCompressedTTF(inCon_fontTest_compressed_data, inCon_fontTest_compressed_size, 19.6f);
+	//ImFont* Inconsolata = io.Fonts->AddFontFromMemoryCompressedTTF(inCon_fontTest_compressed_data, inCon_fontTest_compressed_size, 19.6f);
+	ImFont* Inconsolata = io.Fonts->AddFontFromMemoryCompressedTTF(inCon_fontTest_compressed_data, inCon_fontTest_compressed_size, 24.4f);
 
 	//ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
@@ -118,20 +118,30 @@ int main(int, char**)
         // 3. Show the ImGui demo window. Most of the sample code is in ImGui::ShowDemoWindow(). Read its code to learn more about Dear ImGui!
         if (show_demo_window)
         {
-            ImGui::SetNextWindowPos(ImVec2(680, 75), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
-            ImGui::ShowDemoWindow(&show_demo_window);
+            //ImGui::SetNextWindowPos(ImVec2(680, 775), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
+			ImGui::SetNextWindowPos(ImVec2(680, 150), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
+			ImGui::ShowDemoWindow(&show_demo_window);
         }
 
 		//BEGIN MENU THING FOR PROJECT
 
+
+		//One thing I really, REALLY Need to do, is standardize my line size to a maximum of 80 Columns.it looks better and keeps up with tradition.
+
 		ImGui::SetNextWindowSize(ImVec2(580, 640), ImGuiCond_FirstUseEver);
 		//ImGui::SetNextWindowSize(ImVec2(600, 500), ImGuiCond_FirstUseEver);
 		//ImGui::SetNextWindowPos(ImVec2(660, 0), ImGuiCond_FirstUseEver);
+		/*
+		This is an 80Column set of dots. Nice and clean.
+		We will use this to better type-set the rest of the writing.
+		...............................................................................
+
+		*/
 		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 		ImGui::Begin("GURPSapp Roleplaying Toolset", &my_tool_active, ImGuiWindowFlags_MenuBar);
-		ImGui::Text(" GURPS is a trademark of Steve Jackson Games, and its rules and art are copyrighted by \nSteve Jackson Games. This game aid is the original creation of Joseph Guerrero and is released for \nfree distribution, and not for resale, under the permissions granted in the Steve Jackson Games\n Online Policy. Access this with the link: http://www.sjgames.com/general/online_policy.html");
-		ImGui::Text("\nFor more information, Be sure to purchase the GURPS 4th Edition Basic Set, Campaigns and Characters.");
-		
+		ImGui::Text("GURPS is a trademark of Steve Jackson Games, and its rules and art are\ncopyrighted by Steve Jackson Games.This game aid is the original creation \nof Joseph Guerrero and is released for free distribution, and not for resale.\nThese permissions are granted under the Steve Jackson Games Online Policy. \nAccess this with the link : http://www.sjgames.com/general/online_policy.html");
+		ImGui::Text("\nFor more information, Be sure to purchase the GURPS 4th Edition Basic Set, \nCampaigns and Characters. These books will be referenced in the Game Aid.\n ");
+
 		//if (ImGui::BeginMenuBar())
 		//{
 			// Menu Bar is not complete. So, it remains unused.

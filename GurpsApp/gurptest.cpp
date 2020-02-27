@@ -352,17 +352,23 @@ void successRollAddInfo()
 	ImGui::Text("\n          |__________ADDITIONAL_INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information on other uses for Success rolls, Select here.\nSuccess Rolls are the Heart of GURPS. Be sure to familiarize yourself."))
 	{
+		/*
+		This is an 80Column set of dots. Nice and clean.
+		We will use this to better type-set the rest of the writing.
+		...............................................................................
+
+		*/
 		if (ImGui::TreeNode("What is a Success Roll?:"))
 		{
 
-			ImGui::Text("A success roll is the backbone of GURPS. When there's a chance of consequential failiure,\nor rewarding success, a Success Roll is the deciding line of such a fate!\n\nThe Success Roll rolls 3 die, against the effective skill in question.\nAs long as the totalled roll is BELOW the effective skill, the roll succeeds.\nNo matter how high or low an effective skill is; rolling 3 or 4 succeeds,\nlikewise, a roll of 17 or 18 fails, no matter how godlike one's skills may be.\n\nThe Degree of Success or Failiure is the difference of your roll minus your skill.\nThis is often used to break ties, or to affect very good or poor rolls.");
+			ImGui::Text("A success roll is the heart of GURPS. When there's a chance of dire failiure,\nor rewarding success, a Success Roll is the deciding line of such a fate!\n\nThe Success Roll rolls 3 die, against the effective skill in question.\nAs long as the totalled roll is BELOW the effective skill, the roll succeeds.\nNo matter how high or low an effective skill is; rolling 3 or 4 succeeds,\nlikewise, a roll of 17 or 18 fails, no matter how godlike one's skills may be.\n\nThe Degree of Success or Failiure is result of your roll minus your skill.\nThis is often used to break ties, or to affect very good or poor rolls.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
 
 		if (ImGui::TreeNode("Contest Roll Information:"))
 		{
-			ImGui::Text("For a Quick Contest(ex:Two advenurers lunging for the same shiny artifact);\nBoth contestants roll the same skill with the Success Roll Handler. The highest roll wins. \nThe contestant with the highest degree of success breaks a tie.\nIf both parties have identical degrees of success, no one wins.");
+			ImGui::Text("For a Quick Contest(ex:Two advenurers lunging for the same shiny artifact);\nBoth contestants will make a Success Roll including their effective skills. \nThe highest roll of the two contestants wins the contest.\nThe contestant with the highest degree of success breaks a tie.\nIf both parties have identical degrees of success, no one wins.");
 			ImGui::Text("\nRegular Contests(ex:Two politicians at a televised debate);\nAre similar to Quick Contests, but if both parties succeed or fail, they re-roll. \n\nIf both contestants constantly have scored of 6 or less, raise the lower score to 10, \nNext, add that amount to the higher roll and evaluate the winner.\nComplete the opposite process if the two contestant's scores are higher than 14.\n");
 			ImGui::TreePop();
 		}
@@ -452,7 +458,7 @@ void successRoll()
 		//ImGui::SliderInt("Skill", &skill, 0, 20); ImGui::SameLine(150);
 		ImGui::SliderInt("Skill", &skill, 0, 20); //ImGui::SameLine(50);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Slide in the highest skill or attribute to roll against. \nIf you are rolling against an Attribute(HT,IQ,ST) more that 20, treat it as 20.");
-		ImGui::SliderInt("Modifier(Success)", &modifier0, -10, 10);
+		ImGui::SliderInt("Skill Modifier(s)", &modifier0, -10, 10);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your chance of success\ncan be more or less favorable. \n\nThis modifier fine tunes your effective skill,\nwhich will modify your final rolled value.\n(Ex: -5 to your Running skill as your\nfoe has greased your escape path) \n\nAll Equipment and situational\nmodifiers can be tallied up here.");
 		//If you want to change the values of the roll directly, enable the slider below for debug.
 		//ImGui::SliderInt("DEBUG: RollValue", &roll, 3, 18);
@@ -463,7 +469,7 @@ void successRoll()
 			result = success(skill, modifier0, roll);
 		//ImGui::SameLine(300);
 		//ImGui::SameLine(); ImGui::Text("\nCurrent Roll is 3d+ %d\n", modifier0);
-		ImGui::SameLine(); ImGui::Text("\nCurrent Roll is 3d+ %d\n", modifier0);
+		ImGui::SameLine(); ImGui::Text("\nYou will roll: 3d+ %d\n", modifier0);
 			//3d + %d
 		
 
@@ -471,9 +477,9 @@ void successRoll()
 
 		ImGui::Text("\n          |__________SUCCESS ROLL RESULTS__________|");
 		ImGui::Separator();
-		ImGui::Text("          Current Dice Total: %d", roll);
-		ImGui::Text("          Success Roll Value: %d", (roll+modifier0));
-		ImGui::Text("          Textual Results of Success Roll:");
+		ImGui::Text("          Sum of 3d Roll: %d", roll);
+		ImGui::Text("          \n          Roll + Modifer: %d", (roll+modifier0));
+		ImGui::Text("          \n          Result of Success Roll:");
 		if (result == 1)
 		{
 			ImGui::Text("          Disaster! You Critically Failed this roll.\n          The Degree of Success or Failiure was: %d", degree);
@@ -675,7 +681,7 @@ void damageRoll()
 	if (ImGui::CollapsingHeader("\nDamage Roll Handler\n\n"))
 	{
 		
-		ImGui::Text("When your attack strikes, use these tools to determine the damage output. \nIf you take damage, this tool also determine how much damage to your HT you have taken. \n\n\nFor additional details See Page 369-374 of Gurps 4e Basic Set: Campaigns");
+		ImGui::Text("When your attack strikes, use these tools to determine the damage output. \nIf you take damage, this tool also determines how much damage to your HP \nthat you have taken when something has hit you, or the other way around. \n\n\nFor additional details See Page 369-374 of Gurps 4e Basic Set: Campaigns");
 		//BEGINNING COMBAT INFORMATION
 		damageRollAddInfo();
 		
@@ -700,8 +706,8 @@ void damageRoll()
 		//MELEE WEAPON RULES
 		ImGui::Text("\n\n");
 		ImGui::Text("__________MELEE DAMAGE HANDLING_______________________\n");
-		ImGui::Text("If your Weapon Uses Muscle Power, Select the box below to quicky ready your roll.\nThis includes Thrown weapons, Bows and Crossbows.\n");
-		ImGui::Checkbox("Muscle Powered Weapon Equipped.", &isMelee);
+		ImGui::Text("If your Weapon Uses Muscle Power, Select the box below to quicky ready your roll.\nThis includes Thrown and Melee Weapons, Bows, and Crossbows.\n");
+		ImGui::Checkbox("Muscle Powered Weapon Equipped?", &isMelee);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Muscle Powered Weapons have damage based on a PC's Strength,\nDamage Type, and a plus or minus modifier.\nFor example, an Axe deals Swing+2 damage.To enter this, \nset Damage Type to Swing, enter the axe user's Strength,\nand set the Melee Modifier to 2.");
 
 		if (isMelee == true)
@@ -727,8 +733,8 @@ void damageRoll()
 				ImGui::EndPopup();
 			}
 			ImGui::SliderInt("PC Strength", &pcStrength, 1, 20);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("Your melee Damage, with tooth or steel, \nis highly dependent on Strength. \nThe stronger you are, the harder you will hit with Swings and Thrusts.");
-			ImGui::SliderInt("Sw/Thr +(_) Melee Modifier", &meleeMod, -20, 20);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Your melee Damage, with tooth ,bowstring, or steel, is highly dependent on Strength. \nThe stronger you are, the harder you will hit with Swings and Thrusts.\nYou will also be able to draw more powerful bowstrings.");
+			ImGui::SliderInt("Sw/Thr +(_) Modifier", &meleeMod, -20, 20);
 			ImGui::SameLine(); GURPS_ShowHelpMarker("Enter the Melee Modifier Here. as with the Swing+2 example above, add the +2 here");
 
 			
@@ -760,7 +766,7 @@ void damageRoll()
 		
 		//Tight beam Burning has a lot of different properties to account for, so it won't be included fro the time being.
 		//WEAPON EFFECT HANDLING
-		ImGui::Text("\nEnter the Wounding Modifer of the weapon you are using here.\nNote: Tight Beam Burning is not represented here. For that Modifier, see Page 399, 433, and 434.");
+		ImGui::Text("\nEnter the Wounding Modifer of the weapon you are using here.\nNote: Tight Beam Burning Damage(Ex:Laser) is not represented here. \nFor that Modifier, see Page 399, 433, and 434.");
 		const char* damType[] = { "Small piercing(pi-)", "Piercing(pi)", "Large Piercing(pi+)", "Huge Piercing(pi++)", "Cutting(cut)" , "Impaling(imp)","Burning(burn)","Corrosion(cor)", "Crushing(cr)", "Fatigue(fat)", "Toxic(tox)"};
 		if (ImGui::Button("Select Wounding Modifer of Selected Weapon:\n\n"))
 			ImGui::OpenPopup("woundingSelector");
@@ -784,6 +790,8 @@ void damageRoll()
 		{
 			dam_roll = (rollMultipleDie(numDie));
 		}
+		ImGui::SameLine(); ImGui::Text("\nYou will roll: %dd+%d\n", numDie, dam_Modifier);
+
 
 		
 
@@ -833,7 +841,7 @@ void damageRoll()
 				ImGui::EndPopup();
 			}
 		}
-
+		//THESE CALCULATIONS NEED TO BE PORTED INTO HELPER FUNCTIONS IN THE FUTURE.
 		
 
 		ImGui::InputInt("Victim's DR", &victim_DR);
@@ -849,7 +857,7 @@ void damageRoll()
 			ImGui::Text("\n");
 		}
 		ImGui::SameLine(); ImGui::Checkbox("Is the Victim's Armor Flexible?", &is_DR_flexible);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("Flexible Armor can cause blunt trauma, if all damage is absorbed.\nIf the armor is layered, any armor that penetrates\n all the way to the flexible armor can cause this trauma.");
+		ImGui::SameLine(); GURPS_ShowHelpMarker("Flexible Armor can cause blunt trauma, if all damage is absorbed.\nIf the armor is layered, any hit that penetrates\n all the way to the flexible armor, and is stopped by it,\n this blunt trauma is inflicted.");
 		if (is_DR_flexible == true)
 		{
 			ImGui::Text("Flexible Armor will now be accounted for.");
@@ -949,6 +957,9 @@ void damageRoll()
 			
 
 		}
+		
+
+
 		ImGui::Text("\n");
 		ImGui::Text("          |__________FINAL RESULTS OF DAMAGE HANDLER__________|");
 		ImGui::Separator();
@@ -1240,7 +1251,7 @@ void defaultTool()
 	static char* final_1d_resultChr = "Default 1d";
 	static char* final_2d_resultChr = "Default 2d";
 	static char* final_3d_resultChr = "Default 3d";
-	const char* input_Desc[] = { "1/5 Inch or 0.5cm","1/3 Inch or 7.62cm","1/2 Inch or 1.27cm","2/3 Inch or 1.7cm","1 Inch or 2.54cm" "1.5 Inch or 3.8cm",""};
+	const char* input_Desc[] = { "1/5 Inch or 0.5cm","1/3 Inch or 7.62cm","1/2 Inch or 1.27cm","2/3 Inch or 1.7cm","1 Inch or 2.54cm", "1.5 Inches or 3.8cm","2 Inches or 5.08cm","3 Inches or 7.62cm", "5 Inches or 12.7cm", "8 Inches or 20.32cm", "1 Foot or 0.3m", "1.5 Feet or 0.45m", "2 Feet or 0.6m","1 Yard or Appox 1m\n1yd = 1m in GURPS.","1.5 Yards or Meters", "2 Yards or Meters", "3 Yards or Meters", "5 Yards or Meters", "7 Yards or Meters", "10 Yards or Meters", "15 Yards or Meters", "20 Yards or Meters", "30 Yards or Meters", "50 Yards or Meters" , "70 Yards or Meters", "100 Yards or Meters" , "150 Yards or Meters", "200 Yards or Meters" , "300 Yards or Meters", "500 Yards or Meters" , "700 Yards or Meters", "1000 Yards or Meters" , "1500 Yards or Meters", "2000 Yards or Meters" , "3000 Yards or Meters", "5000 Yards or Meters" , "7000 Yards or Meters", "10000 Yards or Meters", "15000 Yards or Meters", "20000 Yards or Meters", "30000 Yards or Meters", "50000 Yards or Meters", "70000 Yards or Meters", "100000 Yards or Meters", "150000 Yards or Meters", "200000 Meters or Yards" };
 	static char* OneD_Chr[] = { "A", "B","C","D" };
 	static char* TwoD_Chr[] = {""};
 	static char* ThrD_Chr[] = {""};
@@ -1253,7 +1264,8 @@ void defaultTool()
 	static float input_SMpenalty = 0;
 	static char* bigBacess = "DEFAULT";
 	static int input_sizeMod = 0;
-	static int baccessSelection = -1;
+	//static int baccessSelection = -1;
+	static int baccessSelection = 15;
 	//static float input ;
 
 	static char* input_2d;
@@ -1272,7 +1284,7 @@ void defaultTool()
 		ImGui::Text("This is the general format of each Tool within the GURPSapp Game Aid.\n\n");
 
 		defaultToolAddInfo();
-		ImGui::Text("\nThe middle portion of each tool has a variety of inputs, as well as descriprive messages\nwhich better define their use within the tool.");
+		ImGui::Text("\nThe middle portion of each tool has a variety of inputs and (Info) markers,\nwhich are descriprive messages which better define a tool's input.");
 		ImGui::Text("Hover over the (Info) marker to reveal these further details.\n");
 		ImGui::SameLine(); GURPS_ShowHelpMarker("This is an (Info) Marker. It will give a description \nor additional information about a certain input.");
 
@@ -1297,9 +1309,9 @@ void defaultTool()
 		ImGui::Text("Testing Features here. Ignore the slider and outputs if you wish.\n");
 
 
-		ImGui::Combo("Attempted BigArray Access", &baccessSelection, input_Desc, IM_ARRAYSIZE(input_Desc));
-		ImGui::SliderInt("Input by Size Modifier", &input_sizeMod,-15,30); //ImGui::SameLine(50);
-		ImGui::SliderFloat("Input by Linear Measurement", &input_SMpenalty, (((1 / 5) / 12)), 200000);
+		ImGui::Combo("BigArray Access", &baccessSelection, input_Desc, IM_ARRAYSIZE(input_Desc));
+		ImGui::SliderInt("Input Size Mod (SM)", &input_sizeMod,-15,30); //ImGui::SameLine(50);
+		ImGui::SliderFloat("Input Measurement", &input_SMpenalty, (((1 / 5) / 12)), 200000);
 		//ImGui::SliderInt("1d Array Minupation", &OneD_Chr); //ImGui::SameLine(50);
 		//ImGui::SameLine(); GURPS_ShowHelpMarker("Slide in the highest skill or attribute to roll against. \nIf you are rolling against an Attribute(HT,IQ,ST) more that 20, treat it as 20.");
 		//ImGui::SliderInt("Modifier(Success)", &modifier0, -10, 10);
@@ -1309,7 +1321,7 @@ void defaultTool()
 		
 		ImGui::Text("\n\n          |__________TOOL STRUCTURE RESULTS__________|");
 		ImGui::Separator();
-		ImGui::Text("\n          Most returned results or outputs will appear towards the bottom of the Header.\n          Every returned result has a seperating line defined beneath it.\n          They are generally indented to distance them from other onscreen data.");
+		ImGui::Text("\n          Returned outputs will appear near the bottom of the Tool.\n          Every returned result has a seperating line defined beneath it.\n          They are indented to distance them from other onscreen data.");
 		
 		
 		//The Textual results of my testing appear here. comment out in final build.
@@ -1317,11 +1329,13 @@ void defaultTool()
 		ImGui::Text("          Linear Measurement from BigBadTable: %f\n", bigBadTable[input_sizeMod+15][2]);
 		//ImGui::Text("          Linear Measurement from BigBadTable: %f\n", bigBadTable[input_SMpenalty][0]);
 		ImGui::Text("          BacessSelection Value: %d", input_sizeMod);
-		ImGui::Text("          Current 1d Result: %c", final_1d_resultChr);
-		ImGui::Text("          Current 2d Result: %c", final_2d_resultChr);
-		ImGui::Text("          Current 3d Result: %c", final_3d_resultChr);
-		ImGui::Text("          Current integer value: %d", final_integerValue);
+		//ImGui::Text("          Current 1d Result: %c", final_1d_resultChr);
+		//ImGui::Text("          Current 2d Result: %c", final_2d_resultChr);
+		//ImGui::Text("          Current 3d Result: %c", final_3d_resultChr);
+		ImGui::Text("          SM from Bigarray: %d", baccessSelection - 15);
 		
+
+		//bigBadTable[input_sizeMod+15][2]
 
 		ImGui::Text("\n\n");
 	}
