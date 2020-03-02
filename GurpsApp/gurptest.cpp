@@ -178,7 +178,10 @@ int success(int skill, int modifier, int roll)
 	// 1 is Critical Failiure, 4 is Critical Success, and 2 and 3 are failiure and success, respectively.
 	//
 	int result = 0;
-	int degree = ((skill + modifier) - roll);
+
+	//int degree = ((skill + modifier) - roll);
+	int degree = ( roll - (skill + modifier));
+
 	if ((roll == 3 || roll == 4))
 	{
 		result = 4;
@@ -361,15 +364,16 @@ void successRollAddInfo()
 		if (ImGui::TreeNode("What is a Success Roll?:"))
 		{
 
-			ImGui::Text("A success roll is the heart of GURPS. When there's a chance of dire failiure,\nor rewarding success, a Success Roll is the deciding line of such a fate!\n\nThe Success Roll rolls 3 die, against the effective skill in question.\nAs long as the totalled roll is BELOW the effective skill, the roll succeeds.\nNo matter how high or low an effective skill is; rolling 3 or 4 succeeds,\nlikewise, a roll of 17 or 18 fails, no matter how godlike one's skills may be.\n\nThe Degree of Success or Failiure is result of your roll minus your skill.\nThis is often used to break ties, or to affect very good or poor rolls.");
+			ImGui::Text("Success Rolls are the core of GURPS. If there's a chance of dire failiure,\nor rewarding success, a Success Roll is the deciding line of such a fate!\n\nThe Success Roll rolls 3 die, against the effective skill in question.\nWhen the totalled roll is BELOW the effective skill, the roll succeeds.\nNo matter how high or low an effective skill is; rolling 3 or 4 succeeds.\nA roll of 17 or 18 always fails, no matter how skilled one may be.\n\nThe Degree of Success or Failiure is result of your roll minus your skill.\nThis is often used to break ties, or to affect very good or poor rolls.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
 
 		if (ImGui::TreeNode("Contest Roll Information:"))
 		{
-			ImGui::Text("For a Quick Contest(ex:Two advenurers lunging for the same shiny artifact);\nBoth contestants will make a Success Roll including their effective skills. \nThe highest roll of the two contestants wins the contest.\nThe contestant with the highest degree of success breaks a tie.\nIf both parties have identical degrees of success, no one wins.");
-			ImGui::Text("\nRegular Contests(ex:Two politicians at a televised debate);\nAre similar to Quick Contests, but if both parties succeed or fail, they re-roll. \n\nIf both contestants constantly have scored of 6 or less, raise the lower score to 10, \nNext, add that amount to the higher roll and evaluate the winner.\nComplete the opposite process if the two contestant's scores are higher than 14.\n");
+			ImGui::Text("In a Quick Contest(ex:Two advenurers lunging for the same shiny artifact);\nContestants will make a Success Roll including their effective skills. \nThe highest roll of the two contestants wins the contest.\nThe contestant with the highest degree of success breaks a tie.\nIf both parties have identical degrees of success, no one wins.");
+			//ImGui::Text("\nRegular Contests(ex:Two politicians at a televised debate);\nAre similar to Quick Contests, but,\nif both parties succeed or fail, \nthey re-roll until one loses and the other wins. \n\nIf both contestants constantly have scored of 6 or less, \nraise the lower score to 10. Next, \nadd that amount to the higher roll and evaluate the winner.\nIf the two contestant's scores are higher than 14, to prevent stalemates, complete the opposite process. \n");
+			ImGui::Text("\nRegular Contests(ex:Two politicians at a televised debate);\nAre similar to Quick Contests, but if both parties succeed,\nor both parties fail simultaneously, they re-roll.\nThis continues until one contestant loses and the other wins. \nSee Page 349 of GURPS: Campaigns for information on extreme tiebreakers.\n\n");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
@@ -377,13 +381,13 @@ void successRollAddInfo()
 		if (ImGui::TreeNode("Resistance Roll Information:"))
 		{
 			//ImGui::Text("");
-			ImGui::Text("In a Resistance Roll, an unwilling subject rolls to resist using a skill or attribute.\nThe attacker uses their attacking ability, and the defender, the related resistance.\n\nThis process follows the rules of a Quick Contest, but the attacker must win outright.\nIn the event of a tie, the defender resists the attack and is unharmed by the affliction.\n\nIf the attack is against a living, sapient subject, \nthe attacker's effective skill can't exceed 16, unless the defender's resistance is > 16.\nOften, Resistance rolls are Will Rolls(By Default, your IQ), against fear, stress, and force.");
+			ImGui::Text("In a Resistance Roll, an unwilling subject rolls to resist an effect\nby rolling a Success Roll with the necessary skill or attribute.\n(Ex: Take a Will Roll as the Vampire attempts to influence your mind.)\n\nThe attacker must win outright in order to affect their target.\nIn the event of a tie, the defender succeeds, and is left unharmed.\n\nIf the attack is supernatural in nature against a living or sapient being, \nthe attacker's effective skill can't exceed 16 unless the defender's\nresistance is greater than 16. If so, the defender rolls the larger value.\nMost Resistance rolls are Will Rolls(By Default, your IQ)");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
 		if (ImGui::TreeNode("Sense Roll Information:"))
 		{
-			ImGui::Text("Sense Rolls involve a roll against your senses to detect something, often hidden.\n(Ex:Tasting poison in the queen's wine at her coronation feast.)\nTo roll, use your Perception(By Default, your IQ) as the governing skill.\n\nItems or persons that are visally hidden(Ex:A Stowaway) can be treated as a Quick Contest \nagainst the planter or hiding individual's soncealment skills (Holdout,Camouflage).\n\nFor situations that test hearing, make a separate IQ Roll to make out speech.\nIn a Quick Contest role to stay silent, use the Stealth Skill.\nFor hearing distances, refer to Page 358 of the Basic Set: Campaigns.\n\nTaste and Smell are sensorily similar. The advantages Disciminitory Taste and Smell \ncan allow you to identify people, places, and things similar to standard vision.");
+			ImGui::Text("Sense Rolls involve a roll against your senses to detect something. \nIf a Sense Roll succeeds, the detail should be very important!\nIf successful, you may need a second roll to understand it in detail.\n(Ex:The queen's wine tastes tinny at her coronation feast.\nMake a Comprehension Roll to determine if it's actually poison.)\nTo roll, use your Perception(By Default, your IQ) as the governing skill.\n\nItems visally hidden(Ex:A Stowaway) can be treated as a Quick Contest \nagainst the planter's or individual's hiding skills (Holdout,Camouflage).\n\nFor situations that test hearing, make another IQ Roll to make out speech.\nIn a Quick Contest role to stay silent, use the Stealth Skill.\nSee Page 358 of the Basic Set: Campaigns for hearing distances.\n\nTaste and Smell are similar. The advantages Disciminitory Taste and Smell \ncan allow you to identify people, places, and things similar to vision.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
@@ -402,6 +406,7 @@ void successRoll()
 		static bool is_CombatRoll = false;
 		static bool is_ATK = false;
 		static bool is_DEF = false;
+		static bool isDamRollIO = true;
 		const char* manuverArrayATK[] = { "All-Out Attack:Melee", "Thrust" };
 		const char* manuverArrayDEF[] = { "All out Defense", "Thrust" };
 		//
@@ -410,6 +415,7 @@ void successRoll()
 		static int roll = 10;
 		static int degree = 0;
 		int result = 3;
+
 		ImGui::Text("Roll 3 Die against your skills, attributes, and situational modifiers. \nThis can be used for Attribute Rolls(ex:Will Rolls), Skill Rolls, \nand can help you determine if you succeed under pressure.\n\n\nFor additional details See Page 343-349 of Gurps 4e Basic Set: Campaigns");
 
 		//ImGui::Text("For more information on other uses for Success rolls, Select here.");
@@ -417,7 +423,7 @@ void successRoll()
 		//to preserve the clarity of the function, I'm moving the texty bits into seperate functions.
 		
 		//
-		ImGui::Text("\n__________SUCCESS ROLL INPUT_______________________\n");
+		ImGui::Text("\n__________SUCCESS ROLL INPUT_______________________\n\n");
 
 		////
 
@@ -453,24 +459,36 @@ void successRoll()
 		}
 		*/
 
-		ImGui::Text("\n\n");
+		
 		//Primary Controls for Success Roll:
 		//ImGui::SliderInt("Skill", &skill, 0, 20); ImGui::SameLine(150);
-		ImGui::SliderInt("Skill", &skill, 0, 20); //ImGui::SameLine(50);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("Slide in the highest skill or attribute to roll against. \nIf you are rolling against an Attribute(HT,IQ,ST) more that 20, treat it as 20.");
-		ImGui::SliderInt("Skill Modifier(s)", &modifier0, -10, 10);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your chance of success\ncan be more or less favorable. \n\nThis modifier fine tunes your effective skill,\nwhich will modify your final rolled value.\n(Ex: -5 to your Running skill as your\nfoe has greased your escape path) \n\nAll Equipment and situational\nmodifiers can be tallied up here.");
-		//If you want to change the values of the roll directly, enable the slider below for debug.
-		//ImGui::SliderInt("DEBUG: RollValue", &roll, 3, 18);
-		ImGui::SameLine(); ImGui::Text("          ");
-		if (ImGui::Button("\n     Click to Roll   \n\n"))
-		    roll = rollMultipleDie(3);
+
+		ImGui::Checkbox("Expand Success Roll Input?", &isDamRollIO);
+		ImGui::SameLine(); GURPS_ShowHelpMarker("Select to expand the Success Roll Input Area. Collapse if you feel the workspace is too cluttered.");
+		if (isDamRollIO == true)
+		{
+			ImGui::Text("\n\n");
+			ImGui::SliderInt("Skill", &skill, 0, 20); //ImGui::SameLine(50);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Slide in the highest skill or attribute to roll against. \nIf you are rolling against an Attribute(HT,IQ,ST) more that 20, treat it as 20.");
+			ImGui::SliderInt("Skill Modifier(s)", &modifier0, -10, 10);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your chance of success\ncan be more or less favorable. \n\nThis modifier fine tunes your effective skill,\nwhich will modify your final rolled value.\n(Ex: -5 to your Running skill as your\nfoe has greased your escape path) \n\nAll Equipment and situational\nmodifiers can be tallied up here.");
+			//If you want to change the values of the roll directly, enable the slider below for debug.
+			//ImGui::SliderInt("DEBUG: RollValue", &roll, 3, 18);
+			ImGui::SameLine(); ImGui::Text("          ");
+			if (ImGui::Button("\n     Click to Roll   \n\n"))
+				roll = rollMultipleDie(3);
 			degree = ((skill + modifier0) - roll);
 			result = success(skill, modifier0, roll);
-		//ImGui::SameLine(300);
-		//ImGui::SameLine(); ImGui::Text("\nCurrent Roll is 3d+ %d\n", modifier0);
-		ImGui::SameLine(); ImGui::Text("\nYou will roll: 3d+ %d\n", modifier0);
+			//ImGui::SameLine(300);
+			//ImGui::SameLine(); ImGui::Text("\nCurrent Roll is 3d+ %d\n", modifier0);
+			ImGui::SameLine(); ImGui::Text("\nYou will roll: 3d+ %d\n", modifier0);
 			//3d + %d
+
+		}
+		else 
+		{
+			ImGui::Text("Success Roll Input is Collapsed.\n");
+		}
 		
 
 
@@ -1233,7 +1251,7 @@ void defaultToolAddInfo()
 		
 		if (ImGui::TreeNode("More Useful Information."))
 		{
-			ImGui::Text("Some of these tabs may be quite the read, but, their info can be essential.");
+			ImGui::Text("Some of these tabs may be quite the read, but their info is essential.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
@@ -1270,23 +1288,40 @@ void defaultTool()
 
 	static char* input_2d;
 	//I'm mainly attempting to know more about the 2d arrays As far as I know, SpeedRange Table is accurate..
+	//Big Bad Table should be a direct translation of the Speed Range Table from the reference Section of GURPS: Campaigns.
 	static float bigBadTable[46][3] =
 	{
 		{ 0,-15,0.0056 },{ 0,-14,0.00925 },{ 0,-13, 0.01389 },{ 0,-12,0.0185 },{ 0,-11, 0.0277 },{ 0,-10, 0.04167 },{ 0,-9, 0.056 },{ 0,-8, 0.083 },{ 0,-7, 0.1389},{ 0,-6, 0.222 },{ 0,-5, 0.333 },{ 0,-4, 0.5 },{ 0,-3, 0.667 },{ 0,-2, 1 },{ 0,-1, (3 / 2) },{ 0,0, 2 },{ -1,1, 3 },{ -2, 2, 5 },{ -3, 3, 7 },{ -4, 4, 10 },{ -5, 5, 15 },{ -6, 6, 20 },{ -7,7,30 },{ -8,8,50 },{ -9,9,70 },{ -10,10,100 },{ -11,11,150 },{ -12,12,200 },{ -13,13,300 },{ -14,14,500 },{ -15,15,700 },{ -16,16,1000 },{ -17,17,1500 },{ -18,18,2000 },{ -19,19,3000 },{ -20,20,5000 },{ -21,21,7000 },{ -22,22,10000 },{ -23,23,15000 },{ -24,24,20000 },{ -25,25,30000 },{ -26,26,50000 },{ -27,27,70000 },{ -28,28,100000 },{ -29,29,150000 }, {-30,30,200000}
 	};
 	static float selected_firstDimTbl = 0;
 	//static float bigBadArray = bigBadTable[2];
+	static bool isDefaultExpand = true;
 
 
 
 	if (ImGui::CollapsingHeader("Default Tool Structure: \nClick HERE if you are a first time user!\n"))
 	{
-		ImGui::Text("This is the general format of each Tool within the GURPSapp Game Aid.\n\n");
+		ImGui::Text("\nThis is the general format of each Tool within the GURPSapp Game Aid.\n\n");
 
 		defaultToolAddInfo();
-		ImGui::Text("\nThe middle portion of each tool has a variety of inputs and (Info) markers,\nwhich are descriprive messages which better define a tool's input.");
-		ImGui::Text("Hover over the (Info) marker to reveal these further details.\n");
-		ImGui::SameLine(); GURPS_ShowHelpMarker("This is an (Info) Marker. It will give a description \nor additional information about a certain input.");
+
+		ImGui::Text("\n\n");
+		ImGui::Text("___________DEFAULT TOOL INPUT_______________________\n");
+
+		ImGui::Checkbox("Expand Default Roll Input?", &isDefaultExpand);
+		ImGui::SameLine(); GURPS_ShowHelpMarker("Select to shrink the Input Area.\nCollapse if you feel the workspace is too cluttered.");
+		if (isDefaultExpand == true)
+		{
+			ImGui::Text("\nThe middle portion of each tool has a variety of inputs and (Info) markers,\nwhich are descriprive messages which better define a tool's input.");
+			ImGui::Text("Hover over the (Info) marker to reveal these further details.\n");
+			ImGui::SameLine(); GURPS_ShowHelpMarker("This is an (Info) Marker. It will give a description \nor additional information about a certain input.");
+			
+		}
+		else 
+		{
+			ImGui::Text("Default Tool Input is Collapsed.\n");
+		}
+		
 
 		//This is some testing I am doing with sliders and multi-dimensional arrays.
 		//
@@ -1306,12 +1341,15 @@ void defaultTool()
 		}
 		*/
 		//
-		ImGui::Text("Testing Features here. Ignore the slider and outputs if you wish.\n");
+		//ImGui::Text("Testing Features here. Ignore the slider and outputs if you wish.\n");
 
 
-		ImGui::Combo("BigArray Access", &baccessSelection, input_Desc, IM_ARRAYSIZE(input_Desc));
-		ImGui::SliderInt("Input Size Mod (SM)", &input_sizeMod,-15,30); //ImGui::SameLine(50);
-		ImGui::SliderFloat("Input Measurement", &input_SMpenalty, (((1 / 5) / 12)), 200000);
+		//ImGui::Combo("BigArray Access", &baccessSelection, input_Desc, IM_ARRAYSIZE(input_Desc));
+		//ImGui::SliderInt("Input Size Mod (SM)", &input_sizeMod,-15,30); //ImGui::SameLine(50);
+		//ImGui::SliderFloat("Input Measurement", &input_SMpenalty, (((1 / 5) / 12)), 200000);
+
+
+
 		//ImGui::SliderInt("1d Array Minupation", &OneD_Chr); //ImGui::SameLine(50);
 		//ImGui::SameLine(); GURPS_ShowHelpMarker("Slide in the highest skill or attribute to roll against. \nIf you are rolling against an Attribute(HT,IQ,ST) more that 20, treat it as 20.");
 		//ImGui::SliderInt("Modifier(Success)", &modifier0, -10, 10);
@@ -1325,14 +1363,23 @@ void defaultTool()
 		
 		
 		//The Textual results of my testing appear here. comment out in final build.
-		ImGui::Text("          Current Size Modifer: %d", input_sizeMod);
-		ImGui::Text("          Linear Measurement from BigBadTable: %f\n", bigBadTable[input_sizeMod+15][2]);
-		//ImGui::Text("          Linear Measurement from BigBadTable: %f\n", bigBadTable[input_SMpenalty][0]);
-		ImGui::Text("          BacessSelection Value: %d", input_sizeMod);
+		//This shall be continued to be used during testing.
+
+		//ImGui::Text("          Current Size Modifer: %d", input_sizeMod);
+		//ImGui::Text("          Linear Measurement from BigBadTable: %f\n", bigBadTable[input_sizeMod+15][2]);
+		//ImGui::Text("          BacessSelection Value: %d", input_sizeMod);
+
+
 		//ImGui::Text("          Current 1d Result: %c", final_1d_resultChr);
 		//ImGui::Text("          Current 2d Result: %c", final_2d_resultChr);
 		//ImGui::Text("          Current 3d Result: %c", final_3d_resultChr);
-		ImGui::Text("          SM from Bigarray: %d", baccessSelection - 15);
+		//ImGui::Text("          Linear Measurement from BigBadTable: %f\n", bigBadTable[input_SMpenalty][0]);
+
+		
+
+		
+
+		//ImGui::Text("          SM from Bigarray: %d", baccessSelection - 15);
 		
 
 		//bigBadTable[input_sizeMod+15][2]

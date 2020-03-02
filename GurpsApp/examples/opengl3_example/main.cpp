@@ -165,15 +165,15 @@ int main(int, char**)
 
 		successRoll();
 
-		damageRoll();
+		//damageRoll();
 
-		combatStatusTool();
+		//combatStatusTool();
 
-		frightCheck();
+		//frightCheck();
 
-		reactionRolls();
+		//reactionRolls();
 
-		speedrangeTbl();
+		//speedrangeTbl();
 
 		
 		
