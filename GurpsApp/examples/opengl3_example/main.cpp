@@ -161,19 +161,23 @@ int main(int, char**)
 		//Each Function below calls the presence of collapsible headers that are used in the Game Aid.
 
 		//Debug Tool for demonstrating Tool structure.
+		
+
 		defaultTool();
+
+		glossTable();
 
 		successRoll();
 
-		//damageRoll();
+		damageRoll();
 
-		//combatStatusTool();
+		combatStatusTool();
 
-		//frightCheck();
+		frightCheck();
 
-		//reactionRolls();
+		reactionRolls();
 
-		//speedrangeTbl();
+		speedrangeTbl();
 
 		
 		

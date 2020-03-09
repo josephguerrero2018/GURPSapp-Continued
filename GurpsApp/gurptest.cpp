@@ -371,6 +371,7 @@ void successRollAddInfo()
 		...............................................................................
 
 		*/
+		ImGui::Text("\n");
 		if (ImGui::TreeNode("What is a Success Roll?:"))
 		{
 
@@ -490,8 +491,8 @@ void successRoll()
 			ImGui::SliderInt("Skill Modifier(s)", &modifier0, -10, 10);
 			ImGui::SameLine(); GURPS_ShowHelpMarker("In certain situations, your chance of success\ncan be more or less favorable. \n\nThis modifier fine tunes your effective skill,\nwhich will modify your final rolled value.\n(Ex: -5 to your Running skill as your\nfoe has greased your escape path) \n\nAll Equipment and situational\nmodifiers can be tallied up here.");
 
-			ImGui::Checkbox("Select to slide in Roll Value.", &isManualSum);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("Select to input a summed up Die Roll.");
+			ImGui::Checkbox("Select to manually enter Roll Value.", &isManualSum);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Select to slide in the roll value you summed up.\nGreat for when you wish to test the degree of success.");
 			if (isManualSum == false) 
 			{
 				//If you want to change the values of the roll directly, enable the slider below for debug.
@@ -511,7 +512,7 @@ void successRoll()
 				
 				//ImGui::SameLine(300);
 				//ImGui::SameLine(); ImGui::Text("\nCurrent Roll is 3d+ %d\n", modifier0);
-				ImGui::SameLine(); ImGui::Text("\nYou will roll: 3d+ %d\n", modifier0);
+				ImGui::SameLine(); ImGui::Text("\nYou will roll: 3d + %d\n", modifier0);
 				//3d + %d
 			}
 			else 
@@ -566,7 +567,7 @@ void successRoll()
 void reactionRolls()
 {
 
-	if (ImGui::CollapsingHeader("\n(GM)Reaction Rolls: \n\n"))
+	if (ImGui::CollapsingHeader("\nReaction Roll Handler \n\n"))
 	{
 		//Swiftly and clearly handles reaction rolls. 
 		static int modifier2 = 0;
@@ -632,12 +633,14 @@ void damageRollAddInfo()
 	ImGui::Text("\n          |__________ADDITIONAL INFORMATION__________|\n");
 	if (ImGui::TreeNode("For more information regarding Combat and sustaining Injury, Select here.\n This information just might save your PC."))
 	{
+		ImGui::Text("\n");
 		if (ImGui::TreeNode("Basic Combat Flow and Turn sequence:"))
 		{
 			ImGui::Text("Combat in GURPS takes place each turn by a span a second or so, for detailed one on one combat. \nLonger timeframes are more suitable for other situations, like mass combat.\nTurn order is determined by each PC/NPC's Basic Speed. PC ties are broken by highest DX.\nIf a tie is still in the way of turn progress, it is broken by the GM randomly.");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
+		
 		//ImGui::TreePop();
 		if (ImGui::TreeNode("Attack Flow During A Turn:"))
 		{
@@ -763,301 +766,327 @@ void damageRoll()
 		static int raw_damage = 0;
 		static int raw_damage_eval = 0;
 		static bool isMelee = false;
+		static bool isDamHandIO = true;
 		//DAMAGE INPUTS
 
 		//MELEE WEAPON RULES
 		ImGui::Text("\n\n");
 		ImGui::Text("__________MELEE DAMAGE HANDLING_______________________\n");
-		ImGui::Text("If your Weapon Uses Muscle Power, Select the box below to quicky ready your roll.\nThis includes Thrown and Melee Weapons, Bows, and Crossbows.\n");
-		ImGui::Checkbox("Muscle Powered Weapon Equipped?", &isMelee);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("Muscle Powered Weapons have damage based on a PC's Strength,\nDamage Type, and a plus or minus modifier.\nFor example, an Axe deals Swing+2 damage. To enter this, \nset Damage Type to Swing, enter the axe user's Strength,\nand set the Melee Modifier to 2.");
 
-		if (isMelee == true)
+		if (isDamHandIO == true)
 		{
+			ImGui::Text("If your Weapon Uses Muscle Power, Select the box below to quicky ready your roll.\nThis includes Thrown and Melee Weapons, Bows, and Crossbows.\n");
+			ImGui::Checkbox("Muscle Powered Weapon Equipped?", &isMelee);
 
-			static int pcStrength = 10;
-			static int meleeMod = 0;
-			const char* damMelee[] = { "Swing", "Thrust" };
-			//Melee Modifier
-			if (ImGui::Button("Select Melee Damage Type\n\n"))
-				ImGui::OpenPopup("selectMelee");
-			ImGui::SameLine();
-			ImGui::TextUnformatted(selected_Melee == -1 ? "<None Selected>" : damMelee[selected_Melee]);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("Your melee attack will be a Swing or a Thrust, \nchoose as shown on your weapon's table. \n");
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Muscle Powered Weapons have damage based on a PC's Strength,\nDamage Type, and a plus or minus modifier.\nFor example, an Axe deals Swing+2 damage. To enter this, \nset Damage Type to Swing, enter the axe user's Strength,\nand set the Melee Modifier to 2.");
 
-			if (ImGui::BeginPopup("selectMelee"))
+			if (isMelee == true)
 			{
-				ImGui::Text("Damage:");
-				ImGui::Separator();
-				for (int i = 0; i < IM_ARRAYSIZE(damMelee); i++)
-					if (ImGui::Selectable(damMelee[i]))
-						selected_Melee = i;
-				ImGui::EndPopup();
+
+				static int pcStrength = 10;
+				static int meleeMod = 0;
+				const char* damMelee[] = { "Swing", "Thrust" };
+				//Melee Modifier
+				if (ImGui::Button("Select Melee Damage Type\n\n"))
+					ImGui::OpenPopup("selectMelee");
+				ImGui::SameLine();
+				ImGui::TextUnformatted(selected_Melee == -1 ? "<None Selected>" : damMelee[selected_Melee]);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("Your melee attack will be a Swing or a Thrust, \nchoose as shown on your weapon's table. \n");
+
+				if (ImGui::BeginPopup("selectMelee"))
+				{
+					ImGui::Text("Damage:");
+					ImGui::Separator();
+					for (int i = 0; i < IM_ARRAYSIZE(damMelee); i++)
+						if (ImGui::Selectable(damMelee[i]))
+							selected_Melee = i;
+					ImGui::EndPopup();
+				}
+				ImGui::SliderInt("PC Strength", &pcStrength, 1, 20);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("Your melee Damage, with tooth ,bowstring, or steel, is highly dependent on Strength. \nThe stronger you are, the harder you will hit with Swings and Thrusts.\nYou will also be able to draw more powerful bowstrings.");
+				ImGui::SliderInt("Sw/Thr +(_) Modifier", &meleeMod, -20, 20);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("Enter the Melee Modifier Here. as with the Swing+2 example above, add the +2 here");
+
+
+
+				if (ImGui::Button("\nApply Melee Damage Attributes:\n\n"))
+				{
+					dam_Modifier = (DamageTableMod(pcStrength, damMelee[selected_Melee]) + meleeMod);
+					numDie = DamageTableDie(pcStrength, damMelee[selected_Melee]);
+				}
+				ImGui::SameLine(); GURPS_ShowHelpMarker("Press to override the values in the Basic Damage Handler\nwith the Weapon Data you have entered above.");
+				//END OF MELEE DAMAGE HANDLING
 			}
-			ImGui::SliderInt("PC Strength", &pcStrength, 1, 20);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("Your melee Damage, with tooth ,bowstring, or steel, is highly dependent on Strength. \nThe stronger you are, the harder you will hit with Swings and Thrusts.\nYou will also be able to draw more powerful bowstrings.");
-			ImGui::SliderInt("Sw/Thr +(_) Modifier", &meleeMod, -20, 20);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("Enter the Melee Modifier Here. as with the Swing+2 example above, add the +2 here");
-
-
-
-			if (ImGui::Button("\nApply Melee Damage Attributes:\n\n"))
-			{
-				dam_Modifier = (DamageTableMod(pcStrength, damMelee[selected_Melee]) + meleeMod);
-				numDie = DamageTableDie(pcStrength, damMelee[selected_Melee]);
-			}
-			ImGui::SameLine(); GURPS_ShowHelpMarker("Press to override the values in the Basic Damage Handler\nwith the Weapon Data you have entered above.");
-			//END OF MELEE DAMAGE HANDLING
-		}
-		ImGui::Text("\n");
-		ImGui::Text("__________BASIC DAMAGE INPUT_______________________\n");
-		ImGui::Text("Enter Weapon Table Data");
-		ImGui::SliderInt("(__)d Die", &numDie, 1, 8);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("Damage in GURPS is arranged in a Dice + Adds format.\nFor example, for a damage of 3d-2, slide (__)d to 3 dice and subtract 2 from the results using the Melee Modifier below it.");
-
-		ImGui::SliderInt("Basic Modifier", &dam_Modifier, -8, 8);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("This would be the + or - Value adjacent to the number of die.\nSome Weapons are slightly better or worse at what they do than others, even among an identical weapon class. \nBe sure to include this Stat from your Weapon's table. \n");
-
-		ImGui::Text("Die Multiplier/Multiple Shot Counter");
-		ImGui::InputInt("d X (__)", &multiplier);
-		//ImGui::SliderInt("()d Times__", &multiplier, 1, 300 );//Slider just won't work here.
-		ImGui::SameLine(); GURPS_ShowHelpMarker("To prevent excessive die rolling, a roll multiplier is used from X2-3 to the thousands.\nFor Example, for 6dX5, roll six dice and multiply the total damage by 5.\nOr, in the event of a weapon that hits more than 1 time, use this to your advantage.");
-
-
-
-
-		//Tight beam Burning has a lot of different properties to account for, so it won't be included fro the time being.
-		//WEAPON EFFECT HANDLING
-		ImGui::Text("\nEnter the Wounding Modifier of the weapon you are using here.\nNote: Tight Beam Burning Damage(Ex:Laser) is not represented here. \nFor that Modifier, see Page 399, 433, and 434.");
-		const char* damType[] = { "Small piercing(pi-)", "Piercing(pi)", "Large Piercing(pi+)", "Huge Piercing(pi++)", "Cutting(cut)" , "Impaling(imp)","Burning(burn)","Corrosion(cor)", "Crushing(cr)", "Fatigue(fat)", "Toxic(tox)" };
-		if (ImGui::Button("Select Wounding Modifier of Selected Weapon:\n\n"))
-			ImGui::OpenPopup("woundingSelector");
-		ImGui::SameLine();
-		ImGui::TextUnformatted(selected_DMG == -1 ? "<None>" : damType[selected_DMG]);
-		if (ImGui::BeginPopup("woundingSelector"))
-		{
-			ImGui::Text("Wounding Modifer:");
-			ImGui::Separator();
-			for (int i = 0; i < IM_ARRAYSIZE(damType); i++)
-				if (ImGui::Selectable(damType[i]))
-					selected_DMG = i;
-			ImGui::EndPopup();
-		}
-		ImGui::SameLine(); GURPS_ShowHelpMarker("A Wounding Modifier can greatly affect damage output.\nRefer to your weapon's Wounding Modifier in its statistics.");
-
-		ImGui::Text("Round Fractions of Damage Down. Minimum Penetration Damage: 1HP.");
-
-		//
-		if (ImGui::Button("\n          Click to Roll for Basic Damage: \n\n"))
-		{
-			dam_roll = (rollMultipleDie(numDie));
-		}
-		ImGui::SameLine(); ImGui::Text("\nYou will roll: %dd+%d\n", numDie, dam_Modifier);
-
-
-
-
-		raw_damage = ((dam_roll + dam_Modifier) * multiplier);
-		ImGui::Text("\n          |__________BASIC DAMAGE RESULTS__________|");
-		ImGui::Separator();
-		ImGui::Text("             Current BASIC DAMAGE Output:%d", raw_damage);
-		//PENETRATIVE DAMAGE LOCAL VARIABLES
-		static bool useRoll = false;
-		static bool is_DR_flexible = false;
-		static bool is_DR_split = false;
-		static int victim_DR = 0;
-		static int victim_DR_split = 0;
-		static int flex_DR = 0;
-		static int absorbed_damage = 0;
-		static int eval_selected_DMG = -1;
-		//
-		ImGui::Text("\n");
-		ImGui::Text("__________PENETRATIVE DAMAGE HANDLING_______________________\n");
-		ImGui::Checkbox("Use Basic Damage AND Wound Modifier from Current Basic Damage Roll", &useRoll);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("Check this box to use the Basic Damage and weapon properties you Evaluated Above.");
-		if (useRoll == true)
-		{
-			ImGui::Text("You are using your own Basic Damage Roll to measure penetrated Damage.\n\n");
-
-			raw_damage_eval = raw_damage;
 		}
 		else
 		{
-			ImGui::Text("Enter the amount of Basic Damage you, or an enemy, has dealt to measure penetrated damage.\nDO NOT forget to include the Wounding Modifier of the selected weapon Below.");
-			ImGui::InputInt("Basic Damage", &raw_damage_eval);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("This is the Direct amount of damage Dealt by you or an opponent's attack.\n(Example: The DM says you took, say, 16 Damage.)\nIf you want to use the roll from earlier, check the box above.");
-
-			//USER SHOULD INPUT THEIR OWN TYPE OF WOUNDING MODIFIER
-			const char* eval_damType[] = { "Small piercing(pi-)", "Piercing(pi)", "Large Piercing(pi+)", "Huge Piercing(pi++)", "Cutting(cut)" , "Impaling(imp)","Burning(burn)", "Corrosion(cor)", "Crushing(cr)", "Fatigue(fat)", "Toxic(tox)" };
-			if (ImGui::Button("Wounding Modifier of The Damage Dealt:"))
-				ImGui::OpenPopup("Eval_select");
-			ImGui::SameLine();
-			ImGui::TextUnformatted(eval_selected_DMG == -1 ? "<None>" : eval_damType[eval_selected_DMG]);
-			if (ImGui::BeginPopup("Eval_select"))
-			{
-				ImGui::Text("Selected Wounding Modifer:");
-				ImGui::Separator();
-				for (int i = 0; i < IM_ARRAYSIZE(eval_damType); i++)
-					if (ImGui::Selectable(eval_damType[i]))
-						eval_selected_DMG = i;
-				ImGui::EndPopup();
-			}
+			ImGui::Text("Melee Damage Input Collapsed.");
 		}
-		//THESE CALCULATIONS NEED TO BE PORTED INTO HELPER FUNCTIONS IN THE FUTURE.
 
 
-		ImGui::InputInt("Victim's DR", &victim_DR);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("DR is technically you or your victim's armor.\n Usually, it directly subtracts any Basic Damage taken upon being hit. However,\n some types of attacks on armor will damage you without penetration. ");
-		ImGui::Checkbox("Is the Victim's DR Split?", &is_DR_split);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("Some Types of Armor have a Split DR, where it is stronger/weaker against certain attacks.\nThe LEFT DR is the armor's DR against all cutting or piercing.\nThe RIGHT DR is against ALL other Damage Types.");
-		if (is_DR_split == true)
-		{
-			ImGui::Text("Assuming the first DR entry is the LEFT side DR statistic, \nEnter the RIGHT side statistic of the armor here.");
-			ImGui::InputInt("Victim's Split DR", &victim_DR_split);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("For example, a Ultra Tech ballistic(Reflex) vest \nhas a DR  across the Torso at 12/4. You have entered the DR of 12 earlier, now, you will enter the DR of 4 here.");
-			//NEED TO FINISH
 			ImGui::Text("\n");
-		}
-		ImGui::SameLine(); ImGui::Checkbox("Is the Victim's Armor Flexible?", &is_DR_flexible);
-		ImGui::SameLine(); GURPS_ShowHelpMarker("Flexible Armor can cause blunt trauma, if all damage is absorbed.\nIf the armor is layered, any hit that penetrates\n all the way to the flexible armor, and is stopped by it,\n this blunt trauma is inflicted.");
-		if (is_DR_flexible == true)
-		{
-			ImGui::Text("Flexible Armor will now be accounted for.");
-			//NEED TO FINISH
-		}
+			ImGui::Text("__________BASIC DAMAGE INPUT_______________________\n");
 
-		//ImGui::SameLine(); GURPS_ShowHelpMarker("");
-		//ImGui::Text("");
-		if (ImGui::Button("Apply Penetrated Damage:"))
-		{
-			//if () 
-			//{
 
-			//}
-
-			int temp_victim_DR = 0;
-			int temp_damage = 0;
-			int temp_damage_type = 0;
-			//Call local variables to avoid modifying more useful variables.
-			if (useRoll == true)
+			ImGui::Checkbox("Expand Damage Roll Input?", &isDamHandIO);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Un-check this box to collapse the Input Area.");
+			if (isDamHandIO == true)
 			{
-				temp_damage = raw_damage;
-				temp_damage_type = selected_DMG;
+
+				ImGui::Text("Enter Weapon Table Data");
+				ImGui::SliderInt("(__)d Die", &numDie, 1, 8);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("Damage in GURPS is arranged in a Dice + Adds format.\nFor example, for a damage of 3d-2, slide (__)d to 3 dice and subtract 2 from the results using the Melee Modifier below it.");
+
+				ImGui::SliderInt("Basic Modifier", &dam_Modifier, -8, 8);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("This would be the + or - Value adjacent to the number of die.\nSome Weapons are slightly better or worse at what they do than others, even among an identical weapon class. \nBe sure to include this Stat from your Weapon's table. \n");
+
+				ImGui::Text("Die Multiplier/Multiple Shot Counter");
+				ImGui::InputInt("d X (__)", &multiplier);
+				//ImGui::SliderInt("()d Times__", &multiplier, 1, 300 );//Slider just won't work here.
+				ImGui::SameLine(); GURPS_ShowHelpMarker("To prevent excessive die rolling, a roll multiplier is used from X2-3 to the thousands.\nFor Example, for 6dX5, roll six dice and multiply the total damage by 5.\nOr, in the event of a weapon that hits more than 1 time, use this to your advantage.");
+
+
+
+
+				//Tight beam Burning has a lot of different properties to account for, so it won't be included fro the time being.
+				//WEAPON EFFECT HANDLING
+				ImGui::Text("\nEnter the Wounding Modifier of the weapon you are using here.\nNote: Tight Beam Burning Damage(Ex:Laser) is not represented here. \nFor that Modifier, see Page 399, 433, and 434.");
+				const char* damType[] = { "Small piercing(pi-)", "Piercing(pi)", "Large Piercing(pi+)", "Huge Piercing(pi++)", "Cutting(cut)" , "Impaling(imp)","Burning(burn)","Corrosion(cor)", "Crushing(cr)", "Fatigue(fat)", "Toxic(tox)" };
+				if (ImGui::Button("Select Wounding Modifier of Selected Weapon:\n\n"))
+					ImGui::OpenPopup("woundingSelector");
+				ImGui::SameLine();
+				ImGui::TextUnformatted(selected_DMG == -1 ? "<None>" : damType[selected_DMG]);
+				if (ImGui::BeginPopup("woundingSelector"))
+				{
+					ImGui::Text("Wounding Modifer:");
+					ImGui::Separator();
+					for (int i = 0; i < IM_ARRAYSIZE(damType); i++)
+						if (ImGui::Selectable(damType[i]))
+							selected_DMG = i;
+					ImGui::EndPopup();
+				}
+				ImGui::SameLine(); GURPS_ShowHelpMarker("A Wounding Modifier can greatly affect damage output.\nRefer to your weapon's Wounding Modifier in its statistics.");
+
+				ImGui::Text("Round Fractions of Damage Down. Minimum Penetration Damage: 1HP.");
+
+				//
+				if (ImGui::Button("\n          Click to Roll for Basic Damage: \n\n"))
+				{
+					dam_roll = (rollMultipleDie(numDie));
+				}
+				ImGui::SameLine(); ImGui::Text("\nYou will roll: %dd+%d\n", numDie, dam_Modifier);
+
+
 			}
 			else
 			{
-				//User didnt' select the Use Roll, and we use the entered Damage.
-				temp_damage = raw_damage_eval;
-				temp_damage_type = eval_selected_DMG;
+				ImGui::Text("Basic Damage Roll Handler Collapsed.");
+
 			}
 
+
+			raw_damage = ((dam_roll + dam_Modifier) * multiplier);
+			ImGui::Text("\n          |__________BASIC DAMAGE RESULTS__________|");
+			ImGui::Separator();
+			ImGui::Text("             Current BASIC DAMAGE Output:%d", raw_damage);
+			//PENETRATIVE DAMAGE LOCAL VARIABLES
+			static bool useRoll = false;
+			static bool is_DR_flexible = false;
+			static bool is_DR_split = false;
+			static int victim_DR = 0;
+			static int victim_DR_split = 0;
+			static int flex_DR = 0;
+			static int absorbed_damage = 0;
+			static int eval_selected_DMG = -1;
+			//
+			ImGui::Text("\n");
+			ImGui::Text("__________PENETRATIVE DAMAGE HANDLING_______________________\n");
+			ImGui::Checkbox("Use Basic Damage AND Wound Modifier from Current Basic Damage Roll", &useRoll);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Check this box to use the Basic Damage and weapon properties you Evaluated Above.");
+			if (useRoll == true)
+			{
+				ImGui::Text("You are using your own Basic Damage Roll to measure penetrated Damage.\n\n");
+
+				raw_damage_eval = raw_damage;
+			}
+			else
+			{
+				ImGui::Text("Enter the amount of Basic Damage you, or an enemy, has dealt to measure penetrated damage.\nDO NOT forget to include the Wounding Modifier of the selected weapon Below.");
+				ImGui::InputInt("Basic Damage", &raw_damage_eval);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("This is the Direct amount of damage Dealt by you or an opponent's attack.\n(Example: The DM says you took, say, 16 Damage.)\nIf you want to use the roll from earlier, check the box above.");
+
+				//USER SHOULD INPUT THEIR OWN TYPE OF WOUNDING MODIFIER
+				const char* eval_damType[] = { "Small piercing(pi-)", "Piercing(pi)", "Large Piercing(pi+)", "Huge Piercing(pi++)", "Cutting(cut)" , "Impaling(imp)","Burning(burn)", "Corrosion(cor)", "Crushing(cr)", "Fatigue(fat)", "Toxic(tox)" };
+				if (ImGui::Button("Wounding Modifier of The Damage Dealt:"))
+					ImGui::OpenPopup("Eval_select");
+				ImGui::SameLine();
+				ImGui::TextUnformatted(eval_selected_DMG == -1 ? "<None>" : eval_damType[eval_selected_DMG]);
+				if (ImGui::BeginPopup("Eval_select"))
+				{
+					ImGui::Text("Selected Wounding Modifer:");
+					ImGui::Separator();
+					for (int i = 0; i < IM_ARRAYSIZE(eval_damType); i++)
+						if (ImGui::Selectable(eval_damType[i]))
+							eval_selected_DMG = i;
+					ImGui::EndPopup();
+				}
+			}
+			//THESE CALCULATIONS NEED TO BE PORTED INTO HELPER FUNCTIONS IN THE FUTURE.
+
+
+			ImGui::InputInt("Victim's DR", &victim_DR);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("DR is technically you or your victim's armor.\n Usually, it directly subtracts any Basic Damage taken upon being hit. However,\n some types of attacks on armor will damage you without penetration. ");
+			ImGui::Checkbox("Is the Victim's DR Split?", &is_DR_split);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Some Types of Armor have a Split DR, where it is stronger/weaker against certain attacks.\nThe LEFT DR is the armor's DR against all cutting or piercing.\nThe RIGHT DR is against ALL other Damage Types.");
 			if (is_DR_split == true)
 			{
+				ImGui::Text("Assuming the first DR entry is the LEFT side DR statistic, \nEnter the RIGHT side statistic of the armor here.");
+				ImGui::InputInt("Victim's Split DR", &victim_DR_split);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("For example, a Ultra Tech ballistic(Reflex) vest \nhas a DR  across the Torso at 12/4. You have entered the DR of 12 earlier, now, you will enter the DR of 4 here.");
+				//NEED TO FINISH
+				ImGui::Text("\n");
+			}
+			ImGui::SameLine(); ImGui::Checkbox("Is the Victim's Armor Flexible?", &is_DR_flexible);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("Flexible Armor can cause blunt trauma, if all damage is absorbed.\nIf the armor is layered, any hit that penetrates\n all the way to the flexible armor, and is stopped by it,\n this blunt trauma is inflicted.");
+			if (is_DR_flexible == true)
+			{
+				ImGui::Text("Flexible Armor will now be accounted for.");
+				//NEED TO FINISH
+			}
 
-				if ((temp_damage_type >= 0 && temp_damage_type <= 3) || temp_damage_type == 4)
+			//ImGui::SameLine(); GURPS_ShowHelpMarker("");
+			//ImGui::Text("");
+			if (ImGui::Button("Apply Penetrated Damage:"))
+			{
+				//if () 
+				//{
+
+				//}
+
+				int temp_victim_DR = 0;
+				int temp_damage = 0;
+				int temp_damage_type = 0;
+				//Call local variables to avoid modifying more useful variables.
+				if (useRoll == true)
+				{
+					temp_damage = raw_damage;
+					temp_damage_type = selected_DMG;
+				}
+				else
+				{
+					//User didnt' select the Use Roll, and we use the entered Damage.
+					temp_damage = raw_damage_eval;
+					temp_damage_type = eval_selected_DMG;
+				}
+
+				if (is_DR_split == true)
 				{
 
-					temp_victim_DR = victim_DR_split;
+					if ((temp_damage_type >= 0 && temp_damage_type <= 3) || temp_damage_type == 4)
+					{
+
+						temp_victim_DR = victim_DR_split;
+					}
+					else
+					{
+						temp_victim_DR = victim_DR;
+					}
+
 				}
 				else
 				{
 					temp_victim_DR = victim_DR;
 				}
 
-			}
-			else
-			{
-				temp_victim_DR = victim_DR;
-			}
+				//SPLIT DR AND FLEXIBLE HANDLING COMPLETEHANDLING
 
-			//SPLIT DR AND FLEXIBLE HANDLING COMPLETEHANDLING
-
-			if (temp_damage > temp_victim_DR)
-			{
-				//Some Degree of Damage has penetrated!
-				pen_damage = (temp_damage - temp_victim_DR);
-				//These rules only affect Penetrated DR!
-				if (temp_damage_type == 0)
+				if (temp_damage > temp_victim_DR)
 				{
-					//Small Piercing
-					pen_damage = pen_damage * 0.5;
-				}
-				else if (temp_damage_type == 2 || temp_damage_type == 4)
-				{
-					//Cutting and Large Piercing
-					pen_damage = pen_damage * 1.5;
-				}
-				if (temp_damage_type == 3 || temp_damage_type == 5)
-				{
-					pen_damage = pen_damage * 2;
-				}
-				//dam_roll = (rollMultipleDie(numDie));
-			}
-			else
-			{
-				//The Attack Bounced off, or didn't penetrate. Still, There's situations that may still cause damage.
-				absorbed_damage = temp_damage;
-				//pen_damage = (temp_damage / 10);
-				if (is_DR_flexible == true)
-				{
-					if ((temp_damage_type >= 0 && temp_damage_type <= 4))
+					//Some Degree of Damage has penetrated!
+					pen_damage = (temp_damage - temp_victim_DR);
+					//These rules only affect Penetrated DR!
+					if (temp_damage_type == 0)
 					{
-						//Damage was penetrating 
-						pen_damage = (absorbed_damage / 10);
-
+						//Small Piercing
+						pen_damage = pen_damage * 0.5;
 					}
-					else if (temp_damage_type == 8)
+					else if (temp_damage_type == 2 || temp_damage_type == 4)
 					{
-						//Damage was Crushing
-						pen_damage = (absorbed_damage / 5);
+						//Cutting and Large Piercing
+						pen_damage = pen_damage * 1.5;
 					}
+					if (temp_damage_type == 3 || temp_damage_type == 5)
+					{
+						pen_damage = pen_damage * 2;
+					}
+					//dam_roll = (rollMultipleDie(numDie));
 				}
+				else
+				{
+					//The Attack Bounced off, or didn't penetrate. Still, There's situations that may still cause damage.
+					absorbed_damage = temp_damage;
+					//pen_damage = (temp_damage / 10);
+					if (is_DR_flexible == true)
+					{
+						if ((temp_damage_type >= 0 && temp_damage_type <= 4))
+						{
+							//Damage was penetrating 
+							pen_damage = (absorbed_damage / 10);
+
+						}
+						else if (temp_damage_type == 8)
+						{
+							//Damage was Crushing
+							pen_damage = (absorbed_damage / 5);
+						}
+					}
+
+
+				}
+
 
 
 			}
 
 
 
+			ImGui::Text("\n");
+			ImGui::Text("          |__________FINAL RESULTS OF DAMAGE HANDLER__________|");
+			ImGui::Separator();
+			ImGui::Text("            Current HP DAMAGE PREVENTED:%d", absorbed_damage);
+			ImGui::Text("\n          Current HP DAMAGE PENETRATED TO VICTIM:%d", pen_damage);
+			/*
+			//This Wounding Multiplier set is only for PENETRATED Damage, but it is stuffed here.
+			//Since there's no place for resolving DR just yet.
+			if (selected_DMG == 0)
+			{
+			pen_damage = pen_damage * 0.5;
+			}
+			else if (selected_DMG == 2 || selected_DMG == 4)
+			{
+			pen_damage = pen_damage * 1.5;
+			}
+			if (selected_DMG == 5 || selected_DMG == 6)
+			{
+			pen_damage = pen_damage * 0.5;
+			}
+			*/
+
+			//ImGui::Text("Current Weapon Statistics: %d", dam_roll);
+
+
+			//Description of what's next in this portion of Damage Roll Handler:
+			//We need to create  a tool that should handle DR situations for both the PC delivering damage,
+			//Or, the PC being damaged. Either we split this into two separate functions or we just resolve 
+			//the problem with a check box like the melee damage above.
+
+
+			//END OF DAMAGE ROLL HANDLER
+			ImGui::Text("\n\n");
 		}
 
-
-
-		ImGui::Text("\n");
-		ImGui::Text("          |__________FINAL RESULTS OF DAMAGE HANDLER__________|");
-		ImGui::Separator();
-		ImGui::Text("            Current HP DAMAGE PREVENTED:%d", absorbed_damage);
-		ImGui::Text("\n          Current HP DAMAGE PENETRATED TO VICTIM:%d", pen_damage);
-		/*
-		//This Wounding Multiplier set is only for PENETRATED Damage, but it is stuffed here.
-		//Since there's no place for resolving DR just yet.
-		if (selected_DMG == 0)
-		{
-		pen_damage = pen_damage * 0.5;
-		}
-		else if (selected_DMG == 2 || selected_DMG == 4)
-		{
-		pen_damage = pen_damage * 1.5;
-		}
-		if (selected_DMG == 5 || selected_DMG == 6)
-		{
-		pen_damage = pen_damage * 0.5;
-		}
-		*/
-
-		//ImGui::Text("Current Weapon Statistics: %d", dam_roll);
-
-
-		//Description of what's next in this portion of Damage Roll Handler:
-		//We need to create  a tool that should handle DR situations for both the PC delivering damage,
-		//Or, the PC being damaged. Either we split this into two separate functions or we just resolve 
-		//the problem with a check box like the melee damage above.
-
-
-		//END OF DAMAGE ROLL HANDLER
-		ImGui::Text("\n\n");
-	}
-
-	//END OF FUCNTION
+		//END OF FUCNTION
+	
 };
 
 
@@ -1280,7 +1309,7 @@ void defaultToolAddInfo()
 	{
 		if (ImGui::TreeNode("What is the Default Tool Structure?"))
 		{
-			ImGui::Text("These Tiered tabs will provide additional information on the above subject.\n");
+			ImGui::Text("These Tiered tabs will provide additional info on the above subject.\n");
 			ImGui::TreePop();
 		}
 		ImGui::Text("\n");
@@ -1338,12 +1367,13 @@ void defaultTool()
 
 	if (ImGui::CollapsingHeader("Default Tool Structure: \nClick HERE if you are a first time user!\n"))
 	{
-		ImGui::Text("\nThis is the general format of each Tool within the GURPSapp Game Aid.\n\n");
+		ImGui::Text("\nThis is the general format of each Tool within the GURPSapp Game Aid.\n Click and drag the the lower-right corner of the app to resize it.\n\n");
 
 		defaultToolAddInfo();
 
 		ImGui::Text("\n\n");
 		ImGui::Text("___________DEFAULT TOOL INPUT_______________________\n");
+		ImGui::Text("\n");
 
 		ImGui::Checkbox("Expand Default Roll Input?", &isDefaultExpand);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Select to shrink the Input Area.\nCollapse if you feel the workspace is too cluttered.");
@@ -1425,6 +1455,166 @@ void defaultTool()
 	}
 
 }
+
+
+
+
+
+
+
+void glossTableAddInfo()
+{
+
+	ImGui::Text("          |__________TABLE OF CONTENTS__________|\n");
+	if (ImGui::TreeNode("Select here to reveal the table of contents in the toolset."))
+	{
+
+		ImGui::Text("Success Roll Handler:\nUse for making a Generic Success Roll.\n");
+		ImGui::Text("\n");
+		ImGui::Text("Damage Roll Handler:\nInput or Roll for Damage, and see how much damage was dealt.\n");
+		ImGui::Text("\n");
+		ImGui::Text("Combat Status Tool:\nManage character states to aid in combat.\n");
+		ImGui::Text("\n");
+		ImGui::Text("Fright Check Handler:\nEvaluate just how a great and terrible thing affects you.\n");
+		ImGui::Text("\n");
+		ImGui::Text("Reaction Roll Handler:\nRoll to see if you've made a good impression on an NPC.\n");
+		ImGui::Text("\n");
+		ImGui::Text("Speed/Range Table Tool:\nCalculate your chance to hit something. Large or small.\n");
+		ImGui::Text("\n");
+
+
+		ImGui::TreePop();
+	}
+	ImGui::Text("\n");
+	ImGui::Text("          |__________GLOSSARY OF GURPS TERMS__________|\n");
+	if (ImGui::TreeNode("For more information regarding the Speed/Range Table, Select here."))
+	{
+
+		ImGui::Text("\n");
+
+		if (ImGui::TreeNode("Character Related Terms"))
+		{
+			
+			ImGui::Text("\n");
+			ImGui::Text("Advantages:\n");
+			ImGui::Text("\n");
+
+			if (ImGui::TreeNode("Attributes:"))
+			{
+
+				ImGui::Text("\n");
+
+				ImGui::TreePop();
+			}
+
+			ImGui::Text("\n");
+			ImGui::Text("Disadvantage:\n");
+			ImGui::Text("\n");
+			ImGui::Text("Encumbrance:\n");
+			ImGui::Text("\n");
+
+			if (ImGui::TreeNode("Derived Characteristics:"))
+			{
+
+				ImGui::Text("\n");
+
+				ImGui::TreePop();
+			}
+			ImGui::Text("\n");
+
+			ImGui::TreePop();
+		}
+
+		ImGui::Text("\n");
+
+		if (ImGui::TreeNode("Combat Related Terms"))
+		{
+			
+			ImGui::Text("\n");
+			ImGui::Text("Attack:\n");
+			ImGui::Text("\n");
+			ImGui::Text("Damage:\n");
+			ImGui::Text("\n");
+			ImGui::Text("Defense:\n");
+			ImGui::Text("\n");
+			ImGui::Text("Free Action:\n");
+			ImGui::Text("\n");
+			ImGui::Text("Injury:\n");
+			ImGui::Text("\n");
+			ImGui::Text("Maneuver:\n");
+			ImGui::Text("\n");
+			ImGui::Text("Speed/Range Table:\n");
+			ImGui::Text("\n");
+			ImGui::TreePop();
+		}
+
+		ImGui::Text("\n");
+
+		if (ImGui::TreeNode("Equipment Related Terms"))
+		{
+			ImGui::Text("\n");
+			ImGui::Text("Damage Resistance(DR):\n");
+			ImGui::Text("\n");
+			ImGui::Text("Defense Bonus(DB):\n");
+			ImGui::Text("\n");
+			ImGui::Text("Range:\n");
+			ImGui::Text("\n");
+			ImGui::Text("Tech Level (TL):\n");
+			ImGui::Text("\n");
+
+			ImGui::TreePop();
+		}
+
+		ImGui::Text("\n");
+
+		if (ImGui::TreeNode("Roleplaying Related Terms"))
+		{
+
+			ImGui::Text("\n");
+			ImGui::Text("Character:\n");
+			ImGui::Text("\n");
+			ImGui::Text("Game Master (GM):\n");
+			ImGui::Text("\n");
+			ImGui::Text("Non-Player Character (NPC):\n");
+			ImGui::Text("\n");
+			ImGui::Text("Party:\n");
+			ImGui::Text("\n");
+			ImGui::Text("Player Character (PC):\n");
+			ImGui::Text("\n");
+			ImGui::Text("Race:\n");
+			ImGui::Text("\n");
+
+			ImGui::TreePop();
+		}
+		
+		ImGui::Text("\n");
+
+
+
+		ImGui::TreePop();
+	}
+
+}
+
+void glossTable()
+{
+	if (ImGui::CollapsingHeader("\nGlossary and Table of Contents\n\n"))
+	{
+		ImGui::Text("\n");
+
+		glossTableAddInfo();
+
+		ImGui::Text("\n\n");
+	}
+
+}
+
+
+
+
+
+
+
 
 
 
