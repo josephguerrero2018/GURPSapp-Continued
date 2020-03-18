@@ -420,7 +420,7 @@ void successRoll()
 		static bool is_CombatRoll = false;
 		static bool is_ATK = false;
 		static bool is_DEF = false;
-		static bool isDamRollIO = true;
+		static bool isSucRollIO = false;
 		static bool isManualSum = false;
 		const char* manuverArrayATK[] = { "All-Out Attack:Melee", "Thrust" };
 		const char* manuverArrayDEF[] = { "All out Defense", "Thrust" };
@@ -481,9 +481,9 @@ void successRoll()
 		//Primary Controls for Success Roll:
 		//ImGui::SliderInt("Skill", &skill, 0, 20); ImGui::SameLine(150);
 
-		ImGui::Checkbox("Expand Success Roll Input?", &isDamRollIO);
+		ImGui::Checkbox("Collapse Success Roll Input?", &isSucRollIO);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Select to expand the Success Roll Input Area. Collapse if you feel the workspace is too cluttered.");
-		if (isDamRollIO == true)
+		if (isSucRollIO == false)
 		{
 			ImGui::Text("\n\n");
 			ImGui::SliderInt("Skill", &skill, 0, 20); //ImGui::SameLine(50);
@@ -763,17 +763,18 @@ void damageRoll()
 		static int selected_Melee = -1;
 		static int numDie = 1;
 		static int multiplier = 1;
+		//static unsigned int multiplier = 1;
 		static int raw_damage = 0;
 		static int raw_damage_eval = 0;
 		static bool isMelee = false;
-		static bool isDamHandIO = true;
+		static bool isDamHandIO = false;
 		//DAMAGE INPUTS
 
 		//MELEE WEAPON RULES
 		ImGui::Text("\n\n");
 		ImGui::Text("__________MELEE DAMAGE HANDLING_______________________\n");
 
-		if (isDamHandIO == true)
+		if (isDamHandIO == false)
 		{
 			ImGui::Text("If your Weapon Uses Muscle Power, Select the box below to quicky ready your roll.\nThis includes Thrown and Melee Weapons, Bows, and Crossbows.\n");
 			ImGui::Checkbox("Muscle Powered Weapon Equipped?", &isMelee);
@@ -787,8 +788,10 @@ void damageRoll()
 				static int meleeMod = 0;
 				const char* damMelee[] = { "Swing", "Thrust" };
 				//Melee Modifier
-				if (ImGui::Button("Select Melee Damage Type\n\n"))
+				if (ImGui::Button("Select Melee Damage Type\n\n")) 
+				{
 					ImGui::OpenPopup("selectMelee");
+				}
 				ImGui::SameLine();
 				ImGui::TextUnformatted(selected_Melee == -1 ? "<None Selected>" : damMelee[selected_Melee]);
 				ImGui::SameLine(); GURPS_ShowHelpMarker("Your melee attack will be a Swing or a Thrust, \nchoose as shown on your weapon's table. \n");
@@ -828,9 +831,9 @@ void damageRoll()
 			ImGui::Text("__________BASIC DAMAGE INPUT_______________________\n");
 
 
-			ImGui::Checkbox("Expand Damage Roll Input?", &isDamHandIO);
+			ImGui::Checkbox("Collapse Damage Roll Input?", &isDamHandIO);
 			ImGui::SameLine(); GURPS_ShowHelpMarker("Un-check this box to collapse the Input Area.");
-			if (isDamHandIO == true)
+			if (isDamHandIO == false)
 			{
 
 				ImGui::Text("Enter Weapon Table Data");
@@ -844,7 +847,7 @@ void damageRoll()
 				ImGui::InputInt("d X (__)", &multiplier);
 				//ImGui::SliderInt("()d Times__", &multiplier, 1, 300 );//Slider just won't work here.
 				ImGui::SameLine(); GURPS_ShowHelpMarker("To prevent excessive die rolling, a roll multiplier is used from X2-3 to the thousands.\nFor Example, for 6dX5, roll six dice and multiply the total damage by 5.\nOr, in the event of a weapon that hits more than 1 time, use this to your advantage.");
-
+				ImGui::Text("Note: This Input CAN be zero. Watch out.");
 
 
 
@@ -890,6 +893,7 @@ void damageRoll()
 			ImGui::Separator();
 			ImGui::Text("             Current BASIC DAMAGE Output:%d", raw_damage);
 			//PENETRATIVE DAMAGE LOCAL VARIABLES
+			static bool isDamHitIO = false;
 			static bool useRoll = false;
 			static bool is_DR_flexible = false;
 			static bool is_DR_split = false;
@@ -899,156 +903,167 @@ void damageRoll()
 			static int absorbed_damage = 0;
 			static int eval_selected_DMG = -1;
 			//
-			ImGui::Text("\n");
+			ImGui::Text("\n\n");
 			ImGui::Text("__________PENETRATIVE DAMAGE HANDLING_______________________\n");
-			ImGui::Checkbox("Use Basic Damage AND Wound Modifier from Current Basic Damage Roll", &useRoll);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("Check this box to use the Basic Damage and weapon properties you Evaluated Above.");
-			if (useRoll == true)
+			ImGui::Checkbox("Collapse Pentrative Damage Input?", &isDamHitIO);
+			if (isDamHitIO == false)
 			{
-				ImGui::Text("You are using your own Basic Damage Roll to measure penetrated Damage.\n\n");
-
-				raw_damage_eval = raw_damage;
-			}
-			else
-			{
-				ImGui::Text("Enter the amount of Basic Damage you, or an enemy, has dealt to measure penetrated damage.\nDO NOT forget to include the Wounding Modifier of the selected weapon Below.");
-				ImGui::InputInt("Basic Damage", &raw_damage_eval);
-				ImGui::SameLine(); GURPS_ShowHelpMarker("This is the Direct amount of damage Dealt by you or an opponent's attack.\n(Example: The DM says you took, say, 16 Damage.)\nIf you want to use the roll from earlier, check the box above.");
-
-				//USER SHOULD INPUT THEIR OWN TYPE OF WOUNDING MODIFIER
-				const char* eval_damType[] = { "Small piercing(pi-)", "Piercing(pi)", "Large Piercing(pi+)", "Huge Piercing(pi++)", "Cutting(cut)" , "Impaling(imp)","Burning(burn)", "Corrosion(cor)", "Crushing(cr)", "Fatigue(fat)", "Toxic(tox)" };
-				if (ImGui::Button("Wounding Modifier of The Damage Dealt:"))
-					ImGui::OpenPopup("Eval_select");
-				ImGui::SameLine();
-				ImGui::TextUnformatted(eval_selected_DMG == -1 ? "<None>" : eval_damType[eval_selected_DMG]);
-				if (ImGui::BeginPopup("Eval_select"))
-				{
-					ImGui::Text("Selected Wounding Modifer:");
-					ImGui::Separator();
-					for (int i = 0; i < IM_ARRAYSIZE(eval_damType); i++)
-						if (ImGui::Selectable(eval_damType[i]))
-							eval_selected_DMG = i;
-					ImGui::EndPopup();
-				}
-			}
-			//THESE CALCULATIONS NEED TO BE PORTED INTO HELPER FUNCTIONS IN THE FUTURE.
 
 
-			ImGui::InputInt("Victim's DR", &victim_DR);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("DR is technically you or your victim's armor.\n Usually, it directly subtracts any Basic Damage taken upon being hit. However,\n some types of attacks on armor will damage you without penetration. ");
-			ImGui::Checkbox("Is the Victim's DR Split?", &is_DR_split);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("Some Types of Armor have a Split DR, where it is stronger/weaker against certain attacks.\nThe LEFT DR is the armor's DR against all cutting or piercing.\nThe RIGHT DR is against ALL other Damage Types.");
-			if (is_DR_split == true)
-			{
-				ImGui::Text("Assuming the first DR entry is the LEFT side DR statistic, \nEnter the RIGHT side statistic of the armor here.");
-				ImGui::InputInt("Victim's Split DR", &victim_DR_split);
-				ImGui::SameLine(); GURPS_ShowHelpMarker("For example, a Ultra Tech ballistic(Reflex) vest \nhas a DR  across the Torso at 12/4. You have entered the DR of 12 earlier, now, you will enter the DR of 4 here.");
-				//NEED TO FINISH
-				ImGui::Text("\n");
-			}
-			ImGui::SameLine(); ImGui::Checkbox("Is the Victim's Armor Flexible?", &is_DR_flexible);
-			ImGui::SameLine(); GURPS_ShowHelpMarker("Flexible Armor can cause blunt trauma, if all damage is absorbed.\nIf the armor is layered, any hit that penetrates\n all the way to the flexible armor, and is stopped by it,\n this blunt trauma is inflicted.");
-			if (is_DR_flexible == true)
-			{
-				ImGui::Text("Flexible Armor will now be accounted for.");
-				//NEED TO FINISH
-			}
-
-			//ImGui::SameLine(); GURPS_ShowHelpMarker("");
-			//ImGui::Text("");
-			if (ImGui::Button("Apply Penetrated Damage:"))
-			{
-				//if () 
-				//{
-
-				//}
-
-				int temp_victim_DR = 0;
-				int temp_damage = 0;
-				int temp_damage_type = 0;
-				//Call local variables to avoid modifying more useful variables.
+				ImGui::Text("\n\n");
+				ImGui::Checkbox("Use Basic Damage AND Wound Modifier from Current Basic Damage Roll", &useRoll);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("Check this box to use the Basic Damage and weapon properties you Evaluated Above.");
 				if (useRoll == true)
 				{
-					temp_damage = raw_damage;
-					temp_damage_type = selected_DMG;
+					ImGui::Text("You are using your own Basic Damage Roll to measure penetrated Damage.\n\n");
+
+					raw_damage_eval = raw_damage;
 				}
 				else
 				{
-					//User didnt' select the Use Roll, and we use the entered Damage.
-					temp_damage = raw_damage_eval;
-					temp_damage_type = eval_selected_DMG;
-				}
+					ImGui::Text("Enter the amount of Basic Damage you, or an enemy, has dealt to measure penetrated damage.\nDO NOT forget to include the Wounding Modifier of the selected weapon Below.");
+					ImGui::InputInt("Basic Damage", &raw_damage_eval);
+					ImGui::SameLine(); GURPS_ShowHelpMarker("This is the Direct amount of damage Dealt by you or an opponent's attack.\n(Example: The DM says you took, say, 16 Damage.)\nIf you want to use the roll from earlier, check the box above.");
 
+					//USER SHOULD INPUT THEIR OWN TYPE OF WOUNDING MODIFIER
+					const char* eval_damType[] = { "Small piercing(pi-)", "Piercing(pi)", "Large Piercing(pi+)", "Huge Piercing(pi++)", "Cutting(cut)" , "Impaling(imp)","Burning(burn)", "Corrosion(cor)", "Crushing(cr)", "Fatigue(fat)", "Toxic(tox)" };
+					if (ImGui::Button("Wounding Modifier of The Damage Dealt:"))
+						ImGui::OpenPopup("Eval_select");
+					ImGui::SameLine();
+					ImGui::TextUnformatted(eval_selected_DMG == -1 ? "<None>" : eval_damType[eval_selected_DMG]);
+					if (ImGui::BeginPopup("Eval_select"))
+					{
+						ImGui::Text("Selected Wounding Modifer:");
+						ImGui::Separator();
+						for (int i = 0; i < IM_ARRAYSIZE(eval_damType); i++)
+							if (ImGui::Selectable(eval_damType[i]))
+								eval_selected_DMG = i;
+						ImGui::EndPopup();
+					}
+				}
+				//THESE CALCULATIONS NEED TO BE PORTED INTO HELPER FUNCTIONS IN THE FUTURE.
+
+
+				ImGui::InputInt("Victim's DR", &victim_DR);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("DR is technically you or your victim's armor.\n Usually, it directly subtracts any Basic Damage taken upon being hit. However,\n some types of attacks on armor will damage you without penetration. ");
+				ImGui::Checkbox("Is the Victim's DR Split?", &is_DR_split);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("Some Types of Armor have a Split DR, where it is stronger/weaker against certain attacks.\nThe LEFT DR is the armor's DR against all cutting or piercing.\nThe RIGHT DR is against ALL other Damage Types.");
 				if (is_DR_split == true)
 				{
+					ImGui::Text("Assuming the first DR entry is the LEFT side DR statistic, \nEnter the RIGHT side statistic of the armor here.");
+					ImGui::InputInt("Victim's Split DR", &victim_DR_split);
+					ImGui::SameLine(); GURPS_ShowHelpMarker("For example, a Ultra Tech ballistic(Reflex) vest \nhas a DR  across the Torso at 12/4. You have entered the DR of 12 earlier, now, you will enter the DR of 4 here.");
+					//NEED TO FINISH
+					ImGui::Text("\n");
+				}
+				ImGui::SameLine(); ImGui::Checkbox("Is the Victim's Armor Flexible?", &is_DR_flexible);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("Flexible Armor can cause blunt trauma, if all damage is absorbed.\nIf the armor is layered, any hit that penetrates\n all the way to the flexible armor, and is stopped by it,\n this blunt trauma is inflicted.");
+				if (is_DR_flexible == true)
+				{
+					ImGui::Text("Flexible Armor will now be accounted for.");
+					//NEED TO FINISH
+				}
 
-					if ((temp_damage_type >= 0 && temp_damage_type <= 3) || temp_damage_type == 4)
+				//ImGui::SameLine(); GURPS_ShowHelpMarker("");
+				//ImGui::Text("");
+				if (ImGui::Button("Apply Penetrated Damage:"))
+				{
+					//if () 
+					//{
+
+					//}
+
+					int temp_victim_DR = 0;
+					int temp_damage = 0;
+					int temp_damage_type = 0;
+					//Call local variables to avoid modifying more useful variables.
+					if (useRoll == true)
+					{
+						temp_damage = raw_damage;
+						temp_damage_type = selected_DMG;
+					}
+					else
+					{
+						//User didnt' select the Use Roll, and we use the entered Damage.
+						temp_damage = raw_damage_eval;
+						temp_damage_type = eval_selected_DMG;
+					}
+
+					if (is_DR_split == true)
 					{
 
-						temp_victim_DR = victim_DR_split;
+						if ((temp_damage_type >= 0 && temp_damage_type <= 3) || temp_damage_type == 4)
+						{
+
+							temp_victim_DR = victim_DR_split;
+						}
+						else
+						{
+							temp_victim_DR = victim_DR;
+						}
+
 					}
 					else
 					{
 						temp_victim_DR = victim_DR;
 					}
 
-				}
-				else
-				{
-					temp_victim_DR = victim_DR;
-				}
+					//SPLIT DR AND FLEXIBLE HANDLING COMPLETEHANDLING
 
-				//SPLIT DR AND FLEXIBLE HANDLING COMPLETEHANDLING
-
-				if (temp_damage > temp_victim_DR)
-				{
-					//Some Degree of Damage has penetrated!
-					pen_damage = (temp_damage - temp_victim_DR);
-					//These rules only affect Penetrated DR!
-					if (temp_damage_type == 0)
+					if (temp_damage > temp_victim_DR)
 					{
-						//Small Piercing
-						pen_damage = pen_damage * 0.5;
-					}
-					else if (temp_damage_type == 2 || temp_damage_type == 4)
-					{
-						//Cutting and Large Piercing
-						pen_damage = pen_damage * 1.5;
-					}
-					if (temp_damage_type == 3 || temp_damage_type == 5)
-					{
-						pen_damage = pen_damage * 2;
-					}
-					//dam_roll = (rollMultipleDie(numDie));
-				}
-				else
-				{
-					//The Attack Bounced off, or didn't penetrate. Still, There's situations that may still cause damage.
-					absorbed_damage = temp_damage;
-					//pen_damage = (temp_damage / 10);
-					if (is_DR_flexible == true)
-					{
-						if ((temp_damage_type >= 0 && temp_damage_type <= 4))
+						//Some Degree of Damage has penetrated!
+						pen_damage = (temp_damage - temp_victim_DR);
+						//These rules only affect Penetrated DR!
+						if (temp_damage_type == 0)
 						{
-							//Damage was penetrating 
-							pen_damage = (absorbed_damage / 10);
-
+							//Small Piercing
+							pen_damage = pen_damage * 0.5;
 						}
-						else if (temp_damage_type == 8)
+						else if (temp_damage_type == 2 || temp_damage_type == 4)
 						{
-							//Damage was Crushing
-							pen_damage = (absorbed_damage / 5);
+							//Cutting and Large Piercing
+							pen_damage = pen_damage * 1.5;
 						}
+						if (temp_damage_type == 3 || temp_damage_type == 5)
+						{
+							pen_damage = pen_damage * 2;
+						}
+						//dam_roll = (rollMultipleDie(numDie));
+					}
+					else
+					{
+						//The Attack Bounced off, or didn't penetrate. Still, There's situations that may still cause damage.
+						absorbed_damage = temp_damage;
+						//pen_damage = (temp_damage / 10);
+						if (is_DR_flexible == true)
+						{
+							if ((temp_damage_type >= 0 && temp_damage_type <= 4))
+							{
+								//Damage was penetrating 
+								pen_damage = (absorbed_damage / 10);
+
+							}
+							else if (temp_damage_type == 8)
+							{
+								//Damage was Crushing
+								pen_damage = (absorbed_damage / 5);
+							}
+						}
+
+
 					}
 
 
+
 				}
-
-
 
 			}
+			else
+			{
+				ImGui::Text("Basic Damage Roll Handler Collapsed.");
 
-
+			}
 
 			ImGui::Text("\n");
 			ImGui::Text("          |__________FINAL RESULTS OF DAMAGE HANDLER__________|");
@@ -1131,11 +1146,16 @@ void speedrangeTbl()
 	float range = 0;
 	float size = 0;
 	int calcModifier = 0;
+	//Leaving original version of BigBadTable for now.
 	float table[45][3] = 
 	{
 		{0,-15,(((1 / 5) / 12)) / 3},{ 0,-14,(((1 / 3) / 12) / 3) },{ 0,-13,(((1 / 2) / 12) / 3) },{ 0,-12,(((2 / 3) / 12) / 3) },{ 0,-11, (((1 / 12)) / 3) },{ 0,-10, (((3 / 2) / 12) / 3) },{ 0,-9, ((2 / 12) / 3) },{ 0,-8, ((3 / 12) / 3) },{ 0,-7, ((5 / 12) / 3) },{ 0,-6, ((8 / 12) / 3) },{ 0,-5, (1 / 3) },{ 0,-4, (1 / 3) },{ 0,-3, (2 / 3) },{ 0,-2, 1 },{ 0,-1, (3 / 2) },{ 0,0, 2 },{ -1,1, 3 },{ -2, 2, 5 },{ -3, 3, 7 },{ -4, 4, 10 },{ -5, 5, 15 },{-6, 6, 20},{-7,7,30},{-8,8,50},{-9,9,70},{-10,10,100},{-11,11,150},{-12,12,200},{-13,13,300},{-14,14,500},{-15,15,700},{-16,16,1000},{-17,17,1500},{-18,18,2000},{-19,19,3000},{-20,20,5000},{-21,21,7000},{-22,22,10000},{-23,23,15000},{-24,24,20000},{-25,25,30000},{-26,26,50000},{-27,27,70000},{-28,28,100000},{-29,29,150000}
 	};
-
+	//Use this version of BigBadTable for now.
+	static float bigBadTable[46][3] =
+	{
+		{ 0,-15,0.0056 },{ 0,-14,0.00925 },{ 0,-13, 0.01389 },{ 0,-12,0.0185 },{ 0,-11, 0.0277 },{ 0,-10, 0.04167 },{ 0,-9, 0.056 },{ 0,-8, 0.083 },{ 0,-7, 0.1389 },{ 0,-6, 0.222 },{ 0,-5, 0.333 },{ 0,-4, 0.5 },{ 0,-3, 0.667 },{ 0,-2, 1 },{ 0,-1, (3 / 2) },{ 0,0, 2 },{ -1,1, 3 },{ -2, 2, 5 },{ -3, 3, 7 },{ -4, 4, 10 },{ -5, 5, 15 },{ -6, 6, 20 },{ -7,7,30 },{ -8,8,50 },{ -9,9,70 },{ -10,10,100 },{ -11,11,150 },{ -12,12,200 },{ -13,13,300 },{ -14,14,500 },{ -15,15,700 },{ -16,16,1000 },{ -17,17,1500 },{ -18,18,2000 },{ -19,19,3000 },{ -20,20,5000 },{ -21,21,7000 },{ -22,22,10000 },{ -23,23,15000 },{ -24,24,20000 },{ -25,25,30000 },{ -26,26,50000 },{ -27,27,70000 },{ -28,28,100000 },{ -29,29,150000 },{ -30,30,200000 }
+	};
 	//The tables in here are going to be a little packed in.
 
 	//
@@ -1361,9 +1381,14 @@ void defaultTool()
 	};
 	static float selected_firstDimTbl = 0;
 	//static float bigBadArray = bigBadTable[2];
-	static bool isDefaultExpand = true;
+	static bool isDefaultExpand = false;
 
-
+	//TUTORIAL RELATED VALUES:
+	static int selectedArray = -1;
+	static int selectedSlider = 0;
+	static bool isSelectedBool = false;
+	static int inputButton = 0;
+	
 
 	if (ImGui::CollapsingHeader("Default Tool Structure: \nClick HERE if you are a first time user!\n"))
 	{
@@ -1375,13 +1400,68 @@ void defaultTool()
 		ImGui::Text("___________DEFAULT TOOL INPUT_______________________\n");
 		ImGui::Text("\n");
 
-		ImGui::Checkbox("Expand Default Roll Input?", &isDefaultExpand);
+		ImGui::Checkbox("Collapse Default Roll Input?", &isDefaultExpand);
 		ImGui::SameLine(); GURPS_ShowHelpMarker("Select to shrink the Input Area.\nCollapse if you feel the workspace is too cluttered.");
-		if (isDefaultExpand == true)
+		if (isDefaultExpand == false)
 		{
 			ImGui::Text("\nThe middle portion of each tool has a variety of inputs and (Info) markers,\nwhich are descriptive messages which better define a tool's input.");
 			ImGui::Text("Hover over the (Info) marker to reveal these further details.\n");
 			ImGui::SameLine(); GURPS_ShowHelpMarker("This is an (Info) Marker. It will give a description \nor additional information about a certain input.");
+
+			ImGui::Text("\nIf you would like, review the variety of input methods below. \nMore input methods will be displayed for your perusal as you select them.");
+			
+
+			//INPUT TUTORIAL THING.
+
+			ImGui::Text("\nSlide the Slider Input to 7 to see the next input example..");
+			ImGui::SliderInt("Slider Input", &selectedSlider,-10,10); //ImGui::SameLine(50);
+			ImGui::SameLine(); GURPS_ShowHelpMarker("You can click on an area of the slider to instantly select it!\n");
+			ImGui::Text("Above is a Generic slider Input. Click and drag your cursor\non the Slider itself to select what value you wish to set it to.\n\n");
+
+			if (selectedSlider == 7) 
+			{
+				ImGui::Text("\n\nCheck the 'Go Ahead and Check Me' box to see the next example.");
+				ImGui::Checkbox("Go Ahead and Check Me", &isSelectedBool);
+				ImGui::SameLine(); GURPS_ShowHelpMarker("You can click the text next to the checkbox to activate it as well!");
+				ImGui::Text("This is a Checkbox. Not as much explaining to do on this one.");
+
+				if (isSelectedBool == true) 
+				{
+					ImGui::Text("\n\nSet the Button Input below to 3 to see the next example.");
+					ImGui::InputInt("A Button Input", &inputButton);
+					ImGui::SameLine(); GURPS_ShowHelpMarker("Click the buttons or the value in the the Input area to modify the value.");
+					ImGui::Text("Above is a Button Input. \nYou can Click the [-] [+] buttons to increase it by one.\nYou can also click on the value inside and enter it manually.");
+					if (inputButton == 3) 
+					{
+
+						ImGui::Text("\n\nSelect the option labelled 'Select Me Please!' below.\nYou're almost done!");
+						const char* selectTutorial[] = { "Don't Select Me!","Something else.","Select me please!","Another thing that you don't want.","Some other thing." };
+						if (ImGui::Button("Select Something from this array  \nBy clicking on this button:\n\n"))
+							ImGui::OpenPopup("selectTutorial");
+						ImGui::SameLine();
+						ImGui::TextUnformatted(selectedArray == -1 ? "Nothing Selected" : selectTutorial[selectedArray]);
+						if (ImGui::BeginPopup("selectTutorial"))
+						{
+							ImGui::Text("Selecting Options From an Array:");
+							ImGui::Separator();
+							for (int i = 0; i < IM_ARRAYSIZE(selectTutorial); i++)
+								if (ImGui::Selectable(selectTutorial[i]))
+									selectedArray = i;
+							ImGui::EndPopup();
+						}
+						ImGui::Text("Above is a Selectable Array. Clicking the button will open a drop down menu, \nallowing you to select one of many options available that you would want.\n\n");
+						ImGui::SameLine(); GURPS_ShowHelpMarker("If a selection area is large enough, you may have to scroll through it.\n");
+						if (selectedArray == 2)
+						{
+							ImGui::Text("Congrats! You have selected the 'Select me please!' option in the Array. \nYou are now familiarized with all input methods on this application.");
+						}
+					}
+
+				}
+
+			}
+
+
 
 		}
 		else
