@@ -631,93 +631,94 @@ void reactionRolls()
 void damageRollAddInfo()
 {
 	ImGui::Text("\n          |__________ADDITIONAL INFORMATION__________|\n");
-	if (ImGui::TreeNode("For more information regarding Combat and sustaining Injury, Select here.\n This information just might save your PC."))
+	if (ImGui::TreeNode("For more information about Combat and sustaining Injury, Select here.\n This information just might save your PC."))
 	{
-		ImGui::Text("\n");
+		ImGui::Text("\n\n");
 		if (ImGui::TreeNode("Basic Combat Flow and Turn sequence:"))
 		{
-			ImGui::Text("Combat in GURPS takes place each turn by a span a second or so, for detailed one on one combat. \nLonger timeframes are more suitable for other situations, like mass combat.\nTurn order is determined by each PC/NPC's Basic Speed. PC ties are broken by highest DX.\nIf a tie is still in the way of turn progress, it is broken by the GM randomly.");
+			ImGui::Text("Combat in GURPS takes place each turn by a span a second or so, \nfor detailed one on one combat, Longer timeframes are more suitable \nfor other situations, like mass combat or an extended chase sequence.\nTurn Order in combat is determined by each PC/NPC's Basic Speed value. \nA PC's DX value can break ties in Turn Order evaluations.\nIf a tie is still a problem, it is broken by the GM randomly.");
+
 			ImGui::TreePop();
 		}
-		ImGui::Text("\n");
+		ImGui::Text("\n\n");
 		
 		//ImGui::TreePop();
 		if (ImGui::TreeNode("Attack Flow During A Turn:"))
 		{
 			//ImGui::Text("");
 			ImGui::Text("Here is the Basic Flow of an Attack within One Turn of Combat:");
-			ImGui::BulletText("Make an attack roll(a Success Roll); rolling against your effective skills with your weapon.\nA Critical Success with an Attack Roll skips a defender's Defense Roll.");
-			ImGui::BulletText("If your attack is successful, your opponent must make a Defense roll to evade it.\nThis Defensive Roll(A Success Roll) is against the defender's active defense score.\nFor More Info, refer to the Tab on Defense.");
-			ImGui::BulletText("If you succeed in attempting to hit your target, and they fail to defend against it,\nyour attack hits home, and you will Roll for Damage.");
+			ImGui::BulletText("Make an attack roll(a Success Roll); rolling against your skills \nwith your weapon and relevant modifiers. \nA Critical Success with an Attack Roll skips a Defense Roll.");
+			ImGui::BulletText("If your attack succeeds, your opponent takes a Defense roll to evade.\nThis Defensive Roll(A Success Roll) is against their defense score.");
+			ImGui::BulletText("If you succeed in hitting your target, and they fail to defend,\nyour attack will hit home, and you will foll for damage.");
 			ImGui::TreePop();
 		}
 
 		//We Could REALLY Use an entry on How to Handle and evaluate your on defenses for the defense roll HERE.
 		//It's somewhat optional. it wouldn't break my heart but it would make things go smoothly.
 		//Page 374 of the Basic Set should give you everything you need.
-		ImGui::Text("\n");
+		ImGui::Text("\n\n");
 		if (ImGui::TreeNode("What to Do During a Turn: Maneuvers"))
 		{
-			ImGui::Text("During your turn, you can perform a variety of Maneuvers. Whatever Maneuver you choose in your turn \nwill determine what you can do on your turn, and open or close options for attack or defense.\nGeneral Descriptions of some Maneuvers are below. for more details, see the Upcoming Combat Status Tool.");
-			ImGui::BulletText("Do Nothing:\nTake any Active Defense, but No movement.");
-			ImGui::BulletText("Attack:\nMake an armed attack, melee or ranged. Your weapons must be ready, and target in reach.");
-			ImGui::BulletText("All Out Attack:\n Make an armed attack, with no effort to defend yourself.\nVariations of the All Out Attack are covered in the Combat Status Tool.");
+			ImGui::Text("During your turn, you can perform a variety of Maneuvers. \nWhatever Maneuver you choose determines what you can do on your turn.\nGeneral Descriptions of some Maneuvers are below.");
+			ImGui::BulletText("Do Nothing:\nTake any Active Defense, but No movement."); 
+			ImGui::BulletText("Attack:\nMake an armed attack, melee or ranged. Your weapon must be ready,\nand in range. Ranged weapons can hit far/fast targets at penalty.");
+			ImGui::BulletText("All Out Attack:\nMake an armed attack, with no effort to defend yourself.\nVariations of this attack are on P365 of GURPS Campaigns.");
 			ImGui::BulletText("All Out Defense:\nIncrease your defense options at the cost of attack opportunity. \nDefensive moves vary, and are referenced in the Combat Status Tool.");
-			ImGui::BulletText("Move:\nMove any number of hexes/yards, up to your maximum Move Distance, and take any Active Defense.\n");
+			ImGui::BulletText("Move:\nMove any number of hexes/yards, up to your maximum Move Distance.\nYou can take any Active Defense during this maneuver.\n");
 			//If you run forward for 2+Turns, you receive a 20 percent Move Bonus rounded down.
-			ImGui::BulletText("Change Posture:\nSwitch between one posture to another. You cannot move while changing posture.\nMore detailed info on these postures are in the Combat Status Tool");
-			ImGui::BulletText("Ready:\nGrab or draw any Item and prepare it for use. Some weapons need a Ready Maneuver to be re-used.\nReady maneuvers can be used to operate physical items during combat. \nTake any active defense, but movement is limited to a Step.");
-			ImGui::BulletText("Aim:\nWith specified weapon and target, spend the turn aiming at them. \nIf Aim is followed by an attack, add your weapon's accuracy to your effective skill. \nInjury while aiming needs a Will Roll to check if you lost your aim.\nTake any active defense at the cost of your aim. You can take a step as well.\nSimilar Maneuvers like Evaluate, Concentrate, and Wait are in the Upcoming Combat Status Tool.");
+			ImGui::BulletText("Change Posture:\nSwitch from one posture to another. You can't move during this.\nMore detailed info on these postures are in GURPS Campaigns P367.");
+			ImGui::BulletText("Ready:\nGrab or draw any item in your inventory and prepare it for use. \nSome weapons need more than one Ready Maneuver to be re-used.\nReady maneuvers can be used to operate physical items during combat. \nTake any active defense, but movement is limited to a Step.");
+			ImGui::BulletText("Aim:\nWith specified weapon and target, spend the turn aiming at them. \nIf you Aim, then attack, add your weapon's accuracy to your skill. \nInjury while aiming needs a Will Roll to check if you lost your aim.\n");
 			ImGui::TreePop();
 		}
-		ImGui::Text("\n");
+		ImGui::Text("\n\n");
 		if (ImGui::TreeNode("Free Actions:"))
 		{
 			ImGui::Text("Free Actions can be completed during any maneuver. These include:");
-			ImGui::BulletText("Speech:\nNo matter what, you can always talk in a maneuver. A sentence or two per turn is reasonable.");
-			ImGui::BulletText("Maintain Supernatural Ability:\nAs long as you are active, you can maintain a spell or psionic ability.");
-			ImGui::BulletText("Drop a Ready item:\nYou can drop any item that you have readied. You can drop the item anywhere in reach.");
-			ImGui::BulletText("Crouch:\n If possible, you can crouch (or rise from a crouch to stand) at the start of your turn.\nMovement will be slowed, and you can't sprint, but you will be a harder target to hit.");
+			ImGui::BulletText("Speech:\nUnless you cannot speak, you can always talk during a maneuver. \nA sentence or two per turn is reasonably sized for a turn.");
+			ImGui::BulletText("Maintain Supernatural Ability:\nYou can maintain a spell or psionic ability if you're active.");
+			ImGui::BulletText("Drop a Ready item:\nYou can always drop any item that you have readied. \nYou can drop the readied item anywhere that you can reach.");
+			ImGui::BulletText("Crouch:\nIf possible, you can crouch (or stand) at the start of your turn.\nWhen crouched, your movement will be slowed, and you can't sprint,\nbut you will be a harder target to hit in ranged combat.");
 			ImGui::TreePop();
 		}
-		ImGui::Text("\n");
+		ImGui::Text("\n\n");
 		if (ImGui::TreeNode("Injury and You: When the Dog Bites/Bee Stings."))
 		{
 
-			ImGui::Text("Your HP is determined by your Strength, and can be augmented by spending character points.\nYou will take damage if your opponent's attack penetrates completely through your DR.\nThe Penetrated damage is then modified by the weapon's wounding modifier.\n\nAny penetrated attack is devastating to you or an NPC's combat effectiveness.\n");
-			if (ImGui::TreeNode("Taking Injury:\n\n"))
+			ImGui::Text("Your HP is determined by your Strength, HP can be augmented by spending \ncharacter points. You take damage if your opponent's hit penetrates \ncompletely through your DR, and anything between you and danger.\nThe Penetrated damage is modified by the weapon's wounding modifier.\n\nAny amount of HP damage can reduce to you or an NPC's combat ability.\n");
+			if (ImGui::TreeNode("\nTaking Injury:\n\n"))
 			{
-				ImGui::BulletText("If you have less than 1/3 of your HP, you're badly wounded, Move and Dodge are halved.\n\n");
+				ImGui::BulletText("If you have less than 1/3 of your HP, you are badly wounded. \nYour Move and Dodge are halved until you get better.\n\n");
 
-				ImGui::BulletText("If you have lost HP during a Turn, you are briefly in Shock for your next turn.\nYour DX and IQ for the next turn will be reduced in equal measure to HP loss, up to -4.\nShock doesn't penalize active defensive maneuvers, but it will cripple other skills briefly.\n\n");
+				ImGui::BulletText("If you take HP Damage, you're in Shock for your next turn.\nDX and IQ will be reduced per point HP lost, up to -4.\nA Shock penalty doesn't penalize active defensive maneuvers, \nbut it will cripple other skills significantly.\n\n");
 				ImGui::TreePop();
 			}
 			//ImGui::Text("Crippling Injury:");
-			if (ImGui::TreeNode("Crippling Injury:\n\n"))
+			if (ImGui::TreeNode("\nCrippling Injury:\n\n"))
 			{
-				ImGui::BulletText("If you use hit locations, injury to a limb past a certain HP threshold cripples it.\nArms and Legs are crippled past a victim's HP/2, Heads/Hands at HP/3, and Eyes at HP/10.\nIf you have more limbs than usual, their crippling threshold is HP/(1.5 * #of Limbs).\n\n");
-				ImGui::BulletText("A limb injury will never cause HP damage past the minimum HP to cripple it.\nFor example, if a character has 10HP, and their foot is crushed by an Anvil for 6 damage, \nthe victim only loses 4HP, but the victim's foot is injured almost beyond repair.\nThere is a grim exception to this rule. Eye injuries do NOT have a damage limit.\nIf a body part is injured beyond TWICE the crippling threshold, it is gone forever.\n\n");
-				ImGui::BulletText("If you have received a crippling injury, make an HT roll at the end of Combat.\nIf the the HT roll Succeeds, your injury is Temporary.\nIf you fail, your injury is Lasting, and will take a long time to heal.\nIf you have critically failed, it's Permanent. You lose function of the body part forever.\nIf your Crippling injury is temporary, you suffer its penalties until your HP is full.\nIf Lasting, roll 3d for the number of months it takes to fully heal outside of treatment.\n Permanent crippling gives you a new disadvantage with no character point bonuses.\n\n");
+				ImGui::BulletText("If you use GURPS' Hit Location rules, injury to a limb past an HP\nthreshold will leave that limb Crippled. For Arms and Legs, \npast a victim's HP/2, Heads/Hands at HP/3, and Eyes at HP/10.\nIf you have more limbs than usual, their crippling threshold is \nHP/(1.5 * #of Limbs). For more info, see P400 of GURPS Campaigns. \n\n");
+				ImGui::BulletText("A limb injury cannot cause HP damage past its cripping threshold.\nFor example, if a character has 10HP, and by some cruel fate,\nan anvil lands squarely on their foot dealing 6 points of damage, \nthe victim will only lose 4HP, but the victim's foot is  crippled.\nThere is a grim exception, eye injuries do NOT have a damage limit.\nIf a body part is injured beyond TWICE the crippling threshold, \nthe body part it is gone forever. Use force with great caution.\n\n");
+				ImGui::BulletText("If you had a crippling injury, make an HT roll after Combat.\nIf the the HT roll Succeeds, your injury is Temporary. If you fail,\nyour injury is Lasting, and will take a long time to heal.\nIf you have critically failed, it's Permanent. \nYou lose function of the body part forever.\nIf your Crippling injury is temporary, you suffer its penalties\nof missing a body part until your HP is full.\nIf Lasting, roll 3d for the number of months it takes to heal\noutside of direct medical intervention for your TL.\n");
 				ImGui::TreePop();
 			}
 			//ImGui::BulletText("\n\n");
 			//ImGui::Text("");
 			//ImGui::Text("Major Wounds:");
-			if (ImGui::TreeNode("Major Wounds:\n\n"))
+			if (ImGui::TreeNode("\nMajor Wounds:\n\n"))
 			{
-				ImGui::BulletText("If you sustain a single injury more than 1/2 of your HP in most situations,\nor a body part is Crippled, you have a Major Wound, and you are in trouble.\nTo avoid knockdown and stun from such a grave injury, Take an HT Roll. \nThe HT roll is taken at HT-5 for injuries to the face, Male groin, or vitals. \nRoll to avoid knockdown at HT-10 if wounded in the Skull or Eye.\nRoll to avoid knockdown at HT+3 and HT-4 for High and Low Pain Threshold, respectively.\nIf the HT roll failed, you are stunned. Fall prone and drop anything you were carrying.\nWith a degree of failure greater than 5, you fall unconscious. When stunned, you can take Defense Rolls at -4.\nTo recover from a stun, roll against HT. If successful, you recover. If not, Do Nothing,\n but you can attempt another HT roll to recover on your next turn.\n\n");
+				ImGui::BulletText("If you sustain a single injury for more than 1/2 of your HP,\nor a body part is Crippled, you have a Major Wound. Watch out!\nTo avoid knockdown and stun from such an injury, Take an HT Roll. \nTake an HT-5 roll for hits to the face, Male groin, or vitals. \nRoll to avoid knockdown at HT-10 if wounded in the Skull or Eye.\nRoll to avoid knockdown at HT+3 for PC's with High Pain Threshold,\nand roll HT-4 for Low Pain Threshold, respectively.\nIf the HT roll failed, you are stunned. You must fall prone \nfrom the force and pain, and drop anything you were carrying. \nWith a degree of failure greater than 5, you fall unconscious. \nWhen stunned, you can take Defense Rolls at -4.\nTo recover from a stun, roll against HT.\nIf not, Do Nothing, and make an HT roll on the next turn.\n\n");
 
-				ImGui::BulletText("if you have 0 or less HP, you are in danger of Collapse.\nOn your next turn, make an HT roll at -1 of every full multiple of HP below 0.\nIf Successful, you proceed as usual, but you must continue succeeding to stay in battle.\nIf you Do Nothing, you can focus on remaining conscious, and won't need to roll.\nIf you fail the HT roll, you fall unconscious.\n\n");
+				ImGui::BulletText("If you have 0 or less HP, you are in danger of Collapsing.\nOn your next turn, you must make an HT roll at -1. \nfor every multiple of HP below 0, subtract another -1 to that.\nIf successful, you proceed as normal in critical condition,\nbut, you must continue succeeding HT rolls every turn to act.\nIf you Do Nothing, you can focus on remaining conscious, \nrather than fighting or running whatever is trying to get you.\nIf you fail any of the HT rolls, you fall unconscious.\n\n");
 				ImGui::TreePop();
 			}
 
 			ImGui::TreePop();
 		}
-		ImGui::Text("\n");
+		ImGui::Text("\n\n");
 		if (ImGui::TreeNode("Mortal Injury: Knocking on Heaven's Door."))
 		{
-			ImGui::Text("If you are here, you have suffered injuries that total more than -1x your HP; Good Luck.\nThe effects of injuries stated above still apply, such as HT rolls to stay conscious.");
-			ImGui::BulletText("Once you are injured to -1x HP, make an HT roll. If you fail, you die. That's it. \nAt a degree of failure of -1 or -2 you may cheat death, but you are still dying.\nIf you continue to be injured while in this state, you must roll \nthe same HT roll, with the same consequences, for every multiple of \ndamage that you suffer from in this state.\n");
+			ImGui::Text("If you're here, you've suffered injuries more than -1x HP.\nGood Luck.\nAll effects of injuries stated above still apply, \nthis includes effects such as HT rolls to stay conscious.");
+			ImGui::BulletText("Once you are injured to -1x HP, make an HT roll. \nIf you fail, you die. Unless there's some way around it. \nAt a degree of failure of -1 or -2 you may cheat death for a time,\nbut you are still dying, and in desperate need of medical attention.\nIf you continue to be injured while in this state, you must roll \nthe same HT roll, with the same consequences, for every multiple of \ndamage that you suffer from in this state.\n");
 			ImGui::TreePop();
 		}
 
@@ -746,7 +747,7 @@ void damageRoll()
 	if (ImGui::CollapsingHeader("\nDamage Roll Handler\n\n"))
 	{
 
-		ImGui::Text("When your attack strikes, use these tools to determine the damage output. \nIf you take damage, this tool also determines how much damage to your HP \nthat you have taken when something has hit you, or the other way around. \n\n\nFor additional details See Page 369-374 of Gurps 4e Basic Set: Campaigns");
+		ImGui::Text("If you take damage, this tool determines how much damage to your HP \nthat you have taken when something has hit you, or the other way around. \n\nFor additional details See Page 369-374 of Gurps 4e Basic Set: Campaigns");
 		//BEGINNING COMBAT INFORMATION
 		damageRollAddInfo();
 
@@ -776,7 +777,7 @@ void damageRoll()
 
 		if (isDamHandIO == false)
 		{
-			ImGui::Text("If your Weapon Uses Muscle Power, Select the box below to quicky ready your roll.\nThis includes Thrown and Melee Weapons, Bows, and Crossbows.\n");
+			ImGui::Text("If your Weapon Uses Muscle Power, Select the box below to ready your roll.\nThis includes Thrown and Melee Weapons, Bows, and Crossbows.\n");
 			ImGui::Checkbox("Muscle Powered Weapon Equipped?", &isMelee);
 
 			ImGui::SameLine(); GURPS_ShowHelpMarker("Muscle Powered Weapons have damage based on a PC's Strength,\nDamage Type, and a plus or minus modifier.\nFor example, an Axe deals Swing+2 damage. To enter this, \nset Damage Type to Swing, enter the axe user's Strength,\nand set the Melee Modifier to 2.");
@@ -827,7 +828,7 @@ void damageRoll()
 		}
 
 
-			ImGui::Text("\n");
+			ImGui::Text("\n\n");
 			ImGui::Text("__________BASIC DAMAGE INPUT_______________________\n");
 
 
@@ -849,7 +850,7 @@ void damageRoll()
 				ImGui::SameLine(); GURPS_ShowHelpMarker("To prevent excessive die rolling, a roll multiplier is used from X2-3 to the thousands.\nFor Example, for 6dX5, roll six dice and multiply the total damage by 5.\nOr, in the event of a weapon that hits more than 1 time, use this to your advantage.");
 				ImGui::Text("Note: This Input CAN be zero. Watch out.");
 
-
+				
 
 				//Tight beam Burning has a lot of different properties to account for, so it won't be included fro the time being.
 				//WEAPON EFFECT HANDLING
@@ -871,13 +872,13 @@ void damageRoll()
 				ImGui::SameLine(); GURPS_ShowHelpMarker("A Wounding Modifier can greatly affect damage output.\nRefer to your weapon's Wounding Modifier in its statistics.");
 
 				ImGui::Text("Round Fractions of Damage Down. Minimum Penetration Damage: 1HP.");
-
+				
 				//
 				if (ImGui::Button("\n          Click to Roll for Basic Damage: \n\n"))
 				{
 					dam_roll = (rollMultipleDie(numDie));
 				}
-				ImGui::SameLine(); ImGui::Text("\nYou will roll: %dd+%d\n", numDie, dam_Modifier);
+				ImGui::SameLine(); ImGui::Text("\nYou will roll: %d die +%d Damage\n", numDie, dam_Modifier);
 
 
 			}
@@ -903,7 +904,7 @@ void damageRoll()
 			static int absorbed_damage = 0;
 			static int eval_selected_DMG = -1;
 			//
-			ImGui::Text("\n\n");
+			ImGui::Text("\n\n\n");
 			ImGui::Text("__________PENETRATIVE DAMAGE HANDLING_______________________\n");
 			ImGui::Checkbox("Collapse Pentrative Damage Input?", &isDamHitIO);
 			if (isDamHitIO == false)
@@ -921,12 +922,13 @@ void damageRoll()
 				}
 				else
 				{
-					ImGui::Text("Enter the amount of Basic Damage you, or an enemy, has dealt to measure penetrated damage.\nDO NOT forget to include the Wounding Modifier of the selected weapon Below.");
+					ImGui::Text("Enter the amount of Basic Damage you, or an enemy, has dealt.");
 					ImGui::InputInt("Basic Damage", &raw_damage_eval);
 					ImGui::SameLine(); GURPS_ShowHelpMarker("This is the Direct amount of damage Dealt by you or an opponent's attack.\n(Example: The DM says you took, say, 16 Damage.)\nIf you want to use the roll from earlier, check the box above.");
 
 					//USER SHOULD INPUT THEIR OWN TYPE OF WOUNDING MODIFIER
 					const char* eval_damType[] = { "Small piercing(pi-)", "Piercing(pi)", "Large Piercing(pi+)", "Huge Piercing(pi++)", "Cutting(cut)" , "Impaling(imp)","Burning(burn)", "Corrosion(cor)", "Crushing(cr)", "Fatigue(fat)", "Toxic(tox)" };
+					ImGui::Text("\nDO NOT forget to include the Wounding Modifier of the selected weapon Below.");
 					if (ImGui::Button("Wounding Modifier of The Damage Dealt:"))
 						ImGui::OpenPopup("Eval_select");
 					ImGui::SameLine();
@@ -966,7 +968,7 @@ void damageRoll()
 
 				//ImGui::SameLine(); GURPS_ShowHelpMarker("");
 				//ImGui::Text("");
-				if (ImGui::Button("Apply Penetrated Damage:"))
+				if (ImGui::Button("\nApply Penetrated Damage:\n"))
 				{
 					//if () 
 					//{
@@ -1069,7 +1071,7 @@ void damageRoll()
 			ImGui::Text("          |__________FINAL RESULTS OF DAMAGE HANDLER__________|");
 			ImGui::Separator();
 			ImGui::Text("            Current HP DAMAGE PREVENTED:%d", absorbed_damage);
-			ImGui::Text("\n          Current HP DAMAGE PENETRATED TO VICTIM:%d", pen_damage);
+			ImGui::Text("\n             Current HP DAMAGE PENETRATED TO VICTIM:%d", pen_damage);
 			/*
 			//This Wounding Multiplier set is only for PENETRATED Damage, but it is stuffed here.
 			//Since there's no place for resolving DR just yet.
@@ -1690,8 +1692,15 @@ void glossTable()
 }
 
 
-
-
+void legalMatters()
+{
+	//
+	if (ImGui::CollapsingHeader("Legal Matters:"))
+	{
+		ImGui::Text("GURPS is a trademark of Steve Jackson Games, and its rules and art are\ncopyrighted by Steve Jackson Games.This game aid is the original creation \nof Joseph Guerrero and is released for free distribution, and not for resale.\nThese permissions are granted under the Steve Jackson Games Online Policy. \nAccess this with the link : http://www.sjgames.com/general/online_policy.html");
+		ImGui::Text("\nFor more information, Be sure to purchase the GURPS 4th Edition Basic Set, \nCampaigns and Characters. These books will be referenced in the Game Aid.\n ");
+	}
+}
 
 
 

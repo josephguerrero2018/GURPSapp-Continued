@@ -43,8 +43,8 @@ int main(int, char**)
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
 
-	
-    ImGui_ImplGlfwGL3_Init(window, true);
+	ImGui_ImplGlfwGL3_Init(window, true);
+    //ImGui_ImplGlfwGL3_Init(window, false);
 
     // Setup style
     ImGui::StyleColorsDark();
@@ -137,11 +137,11 @@ int main(int, char**)
 		...............................................................................
 
 		*/
+
 		ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 		ImGui::Begin("GURPSapp Roleplaying Toolset", &my_tool_active, ImGuiWindowFlags_MenuBar);
-		ImGui::Text("GURPS is a trademark of Steve Jackson Games, and its rules and art are\ncopyrighted by Steve Jackson Games.This game aid is the original creation \nof Joseph Guerrero and is released for free distribution, and not for resale.\nThese permissions are granted under the Steve Jackson Games Online Policy. \nAccess this with the link : http://www.sjgames.com/general/online_policy.html");
-		ImGui::Text("\nFor more information, Be sure to purchase the GURPS 4th Edition Basic Set, \nCampaigns and Characters. These books will be referenced in the Game Aid.\n ");
 
+		legalMatters();
 		//if (ImGui::BeginMenuBar())
 		//{
 			// Menu Bar is not complete. So, it remains unused.
@@ -171,13 +171,13 @@ int main(int, char**)
 
 		damageRoll();
 
-		combatStatusTool();
+		//combatStatusTool();
 
-		frightCheck();
+		//frightCheck();
 
 		reactionRolls();
 
-		speedrangeTbl();
+		//speedrangeTbl();
 
 		
 		
